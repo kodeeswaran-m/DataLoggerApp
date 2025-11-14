@@ -1,0 +1,118 @@
+.app-container {
+  padding: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.demo-card {
+  width: 980px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(20,20,50,0.06);
+  padding: 22px;
+}
+
+h1 { margin: 0 0 14px 0; font-size: 20px; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+  align-items: start;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d6d6db;
+  background: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group textarea { min-height: 88px; resize: vertical; padding: 8px 10px; height: auto; }
+
+.form-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+button.primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid #d6d6db;
+  color: #333;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.combo-options {
+  border: 1px solid #d6d6db;
+  background: white;
+  position: absolute;
+  z-index: 50;
+  width: 100%;
+  max-height: 160px;
+  overflow: auto;
+  border-radius: 6px;
+}
+
+.combo-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.combo-item:hover { background: #f3f6ff; }
+
+.checkbox-text-wrapper {
+  margin-left: 18px;
+  margin-top: 8px;
+}
+
+.preview {
+  margin-top: 18px;
+  background: #f6f7fb;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 13px;
+  color: #222;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
