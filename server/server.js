@@ -1,29 +1,38 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-// const userRoutes = require("./routes/user.routes");
-
-dotenv.config();
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const connectDB = require('./config/db');
+const opportunityRoutes = require('./routes/opportunityRoutes');
 
 const app = express();
 
-// Middlewares 
-app.use(cors());
-app.use(express.json());
-
-// DB Connection
+// Connect to DB
 connectDB();
 
-// Routes
-// app.use("/api/users", userRoutes);
+// Middlewares
+app.use(cors());
+app.use(express.json({ limit: '5mb' })); // supports large payloads if needed
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("Node.js server is running...");
+// Routes
+app.use('/api/opportunities', opportunityRoutes);
+
+// Health-check
+app.get('/', (req, res) => res.send({ status: 'ok', timestamp: new Date().toISOString() }));
+
+// Global error handler (simple)
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Server Error'
+  });
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

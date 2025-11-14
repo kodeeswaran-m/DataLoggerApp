@@ -6,7 +6,7 @@ export type BaseFieldProps<T> = {
   value?: T;
   required?: boolean;
   disabled?: boolean;
-  className?: string; // <-- Added className support
+  className?: string; 
 };
 
 export type TextFieldProps = BaseFieldProps<string> & {
