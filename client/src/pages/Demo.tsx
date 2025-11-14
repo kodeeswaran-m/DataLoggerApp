@@ -3,8 +3,8 @@ import DynamicFormField from "../components/DynamicFormField";
 import type { DynamicFieldProps } from "../components/DynamicFormField";
 import { monthToQuarter } from "../quarter";
 import "./Demo.css";
-
-const Demo: React.FC = () => {
+ 
+const Demo = () => {
   type FormValues = {
     month: string;
     quarter: string;
@@ -25,7 +25,7 @@ const Demo: React.FC = () => {
     rag: string;
     remark: string;
   };
-
+ 
   const [values, setValues] = useState<FormValues>({
     month: "",
     quarter: "",
@@ -46,7 +46,7 @@ const Demo: React.FC = () => {
     rag: "",
     remark: "",
   });
-
+ 
   const updateValue = (name: keyof FormValues, value: string) => {
     setValues((prev) => ({
       ...prev,
@@ -54,21 +54,21 @@ const Demo: React.FC = () => {
       ...(name === "month" && { quarter: monthToQuarter(value) }),
     }));
   };
-
+ 
   const updateCheckbox = (call: "call1" | "call2" | "call3", checked: boolean) => {
     setValues((prev) => ({
       ...prev,
       [call]: { ...prev[call], checked },
     }));
   };
-
+ 
   const updateCheckboxText = (call: "call1" | "call2" | "call3", notes: string) => {
     setValues((prev) => ({
       ...prev,
       [call]: { ...prev[call], notes },
     }));
   };
-
+ 
   const fields: DynamicFieldProps[] = [
     {
       type: "select",
@@ -128,33 +128,34 @@ const Demo: React.FC = () => {
     { type: "select", name: "rag", label: "RAG", value: values.rag, options: [{label:"Red", value:"red"}, {label:"Amber", value:"amber"}, {label:"Green", value:"green"}], onChange: (v) => updateValue("rag", v) },
     { type: "text", name: "remark", label: "Remarks", value: values.remark, placeholder: "Enter remarks", onChange: (v) => updateValue("remark", v) },
   ];
-
+ 
   return (
     <div className="app-container">
       <div className="demo-card">
         <h1>Basic Data</h1>
-
+ 
         <div className="form-grid">
           {fields.slice(0,5).map(f => <DynamicFormField key={f.name} {...f} />)}
-
+ 
           <div className="call-group section-card">
             {fields.slice(5,8).map(f => <DynamicFormField key={f.name} {...f} />)}
           </div>
-
+ 
           {fields.slice(8).map(f => {
             if(f.name === "oppDetails" || f.name === "remark") return <DynamicFormField key={f.name} {...f} className="full" />
             return <DynamicFormField key={f.name} {...f} />
           })}
         </div>
-
+ 
         <div className="form-actions">
           <button className="primary">Submit</button>
           <button className="ghost">Cancel</button>
         </div>
-
+ 
       </div>
     </div>
   );
 };
-
+ 
 export default Demo;
+ 
