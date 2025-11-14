@@ -1,0 +1,86 @@
+/* ------------------- Page Layout ------------------- */
+.summary-container {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+  min-height: 100vh;
+}
+
+/* ------------------- Summary Card ------------------- */
+.summary-card {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 35px 45px;
+  border-left: 6px solid #2563eb;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Same fade-in animation as Demo */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------- Title ------------------- */
+.summary-card h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: 25px;
+}
+
+/* ------------------- Pagination ------------------- */
+.pagination {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-top: 22px;
+  gap: 14px;
+}
+
+.pagination button {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.pagination button:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+  transform: translateY(-2px);
+}
+
+.pagination button:disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pagination span {
+  font-size: 15px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* ------------------- Responsive ------------------- */
+@media (max-width: 768px) {
+  .summary-card {
+    padding: 20px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

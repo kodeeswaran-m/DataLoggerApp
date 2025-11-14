@@ -1,14 +1,18 @@
-/* ------------ TABLE WRAPPER ------------ */
 .table-container {
   width: 100%;
   max-width: 100%;
-  margin: 30px auto;             /* Center + vertical spacing */
-  padding: 16px;                 /* Padding around table */
-  background: #ffffff;           /* White background */
+  margin: 30px auto;
+  padding: 16px;
+  background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  
+  overflow-x: auto;        /* ⭐ REQUIRED */
+  overflow-y: hidden;      /* optional */
   scroll-behavior: smooth;
+  display: block;          /* ensures scroll works properly */
 }
+
 
 /* Smooth scrollbar */
 .table-container::-webkit-scrollbar {
@@ -28,8 +32,6 @@
   width: max-content;           /* Table expands horizontally */
   min-width: 100%;            /* Minimum width to force scroll */
   border-collapse: collapse;
-  overflow-x: auto;              /* Horizontal scroll ONLY for table */
-  overflow-y: hidden;
   font-family: "Inter", sans-serif;
 }
 
@@ -62,12 +64,10 @@
   cursor: pointer;
 }
 
-/* Stripe effect */
 .opportunity-table tbody tr:nth-child(even) {
   background: #fafafa;
 }
 
-/* YES/NO badge styles */
 .badge-yes {
   background: #e8f5e9;
   color: #2e7d32;
