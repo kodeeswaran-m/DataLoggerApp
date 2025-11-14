@@ -1,22 +1,25 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f6fa;
-}
-
 .app-wrapper {
   display: flex;
   min-height: 100vh;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main-content {
   flex: 1;
-  padding: 20px;
-  background-color: #f3f4f6;
-  transition: margin-left 0.3s;
-  overflow-x: hidden;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  background: #f4f6f9;
+  transition: all 0.3s ease;
 }
 
-.sidebar.collapsed + .main-content {
-  margin-left: 80px;
+.report-placeholder {
+  width: 100%;
+  max-width: 1200px;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  text-align: center;
 }

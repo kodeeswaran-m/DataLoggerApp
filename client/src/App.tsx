@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import Demo from "./Demo";
-import ProspectReport from "./ProspectReport";
-import Sidebar from "./Sidebar";
+import Sidebar from "./sidebar/Sidebar";
+import Demo from "./pages/Demo";
+import ProspectReport from "./reports/ProspectReport";
 import "./App.css";
 
 const App: React.FC = () => {
-  const [activePage, setActivePage] = useState<"demo" | "report">("demo");
+  const [activeMenu, setActiveMenu] = useState("demo");
 
   return (
     <div className="app-wrapper">
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <Sidebar activeMenu={activeMenu} onMenuClick={setActiveMenu} />
+
       <main className="main-content">
-        {activePage === "demo" && <Demo />}
-        {activePage === "report" && <ProspectReport />}
+        {activeMenu === "demo" && <Demo />}
+        {activeMenu === "report" && (
+          <ProspectReport />
+        )}
       </main>
     </div>
   );
