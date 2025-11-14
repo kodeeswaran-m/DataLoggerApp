@@ -1,0 +1,33 @@
+.report-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.report-card h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.report-table th {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.report-table tr:hover {
+  background: #e0f2fe;
+}
