@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
-const opportunityRoutes = require('./routes/opportunityRoutes');
+const prospectDetailRoutes = require('./routes/prospectDetailRoutes');
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/prospectDetail', prospectDetailRoutes);
 
 // Health-check
 app.get('/', (req, res) => res.send({ status: 'ok', timestamp: new Date().toISOString() }));

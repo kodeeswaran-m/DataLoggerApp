@@ -1,14 +1,4 @@
-/* Container */
-.app-container {
-  padding: 30px;
-  background: #f4f6f9;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Card */
+/* ------------------- Demo Card ------------------- */
 .demo-card {
   width: 100%;
   max-width: 1200px;
@@ -16,9 +6,10 @@
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Title */
 .demo-card h1 {
   font-size: 24px;
   font-weight: 700;
@@ -26,19 +17,18 @@
   margin-bottom: 20px;
 }
 
-/* Form Grid - Landscape */
+/* ------------------- Form Grid - Landscape ------------------- */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px 24px;
 }
 
-/* Full-width fields */
 .form-grid .full {
   grid-column: 1 / -1;
 }
 
-/* Section cards */
+/* Section Cards inside form */
 .section-card {
   grid-column: 1 / -1;
   background: #f9fafb;
@@ -49,7 +39,7 @@
   gap: 16px;
 }
 
-/* Form group */
+/* ------------------- Form Groups ------------------- */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -57,14 +47,13 @@
   position: relative;
 }
 
-/* Labels */
 .form-group label {
   font-size: 14px;
   color: #4b5563;
   font-weight: 500;
 }
 
-/* Inputs */
+/* Inputs / Textareas / Selects */
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -77,6 +66,7 @@
   color: #111827;
   transition: all 0.2s ease;
 }
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
@@ -85,12 +75,11 @@
   outline: none;
 }
 
-/* Textarea */
 textarea {
   resize: vertical;
 }
 
-/* Checkbox with text */
+/* ------------------- Checkbox with Text ------------------- */
 .checkbox-text-wrapper {
   margin-top: 6px;
 }
@@ -98,7 +87,7 @@ textarea {
   width: 100%;
 }
 
-/* Buttons */
+/* ------------------- Buttons ------------------- */
 button.primary {
   background: #2563eb;
   color: #fff;
@@ -126,7 +115,7 @@ button.ghost:hover {
   background: #f3f4f6;
 }
 
-/* Preview */
+/* ------------------- JSON Preview ------------------- */
 .preview {
   margin-top: 24px;
   background: #f3f4f6;
@@ -141,7 +130,7 @@ button.ghost:hover {
   border: 1px solid #d1d5db;
 }
 
-/* Form actions */
+/* ------------------- Form Actions ------------------- */
 .form-actions {
   margin-top: 24px;
   display: flex;
@@ -149,7 +138,7 @@ button.ghost:hover {
   gap: 12px;
 }
 
-/* Responsive */
+/* ------------------- Responsive ------------------- */
 @media (max-width: 1024px) {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -162,5 +151,8 @@ button.ghost:hover {
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+  .demo-card {
+    padding: 20px;
   }
 }

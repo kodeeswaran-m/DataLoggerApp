@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import DynamicFormField from "./DynamicFormField";
-import type { DynamicFieldProps } from "./DynamicFormField";
-import { monthToQuarter } from "./quarter";
+import DynamicFormField from "../components/DynamicFormField";
+import type { DynamicFieldProps } from "../components/DynamicFormField";
+import { monthToQuarter } from "../quarter";
 import "./Demo.css";
 
 const Demo: React.FC = () => {
@@ -152,9 +152,6 @@ const Demo: React.FC = () => {
           <button className="ghost">Cancel</button>
         </div>
 
-        <div className="preview">
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-        </div>
       </div>
     </div>
   );

@@ -1,0 +1,84 @@
+/* ------------ TABLE WRAPPER ------------ */
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 30px auto;             /* Center + vertical spacing */
+  padding: 16px;                 /* Padding around table */
+  background: #ffffff;           /* White background */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  scroll-behavior: smooth;
+}
+
+/* Smooth scrollbar */
+.table-container::-webkit-scrollbar {
+  height: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 20px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+
+/* ------------ TABLE STYLE ------------ */
+.opportunity-table {
+  width: max-content;           /* Table expands horizontally */
+  min-width: 100%;            /* Minimum width to force scroll */
+  border-collapse: collapse;
+  overflow-x: auto;              /* Horizontal scroll ONLY for table */
+  overflow-y: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+/* Header */
+.opportunity-table th {
+  background: #f7f7f7;
+  padding: 14px 20px;           /* Header padding */
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+  border-bottom: 2px solid #e1e1e1;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+/* Body cells */
+.opportunity-table td {
+  padding: 12px 20px;           /* Cell padding */
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid #e5e5e5;
+  white-space: nowrap;          /* Prevent wrapping */
+}
+
+/* Row hover */
+.opportunity-table tbody tr:hover {
+  background: #eef6ff;
+  cursor: pointer;
+}
+
+/* Stripe effect */
+.opportunity-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* YES/NO badge styles */
+.badge-yes {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.badge-no {
+  background: #ffebee;
+  color: #c62828;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}

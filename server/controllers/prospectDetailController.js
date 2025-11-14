@@ -1,4 +1,4 @@
-// exports.createOpportunity = async (req, res, next) => {
+// exports.createProspectDetail = async (req, res, next) => {
 //   try {
 //     const payload = req.body;
 
@@ -7,7 +7,7 @@
 //       return res.status(400).json({ success: false, message: 'month, quarter and prospect are required' });
 //     }
 
-//     const opp = new Opportunity(payload);
+//     const opp = new ProspectDetail(payload);
 //     await opp.save();
 
 //     res.status(201).json({ success: true, data: opp });
@@ -15,14 +15,14 @@
 //     next(err);
 //   }
 // };
-// exports.deleteOpportunity = async (req, res, next) => {
+// exports.deleteProspectDetail = async (req, res, next) => {
 //   try {
 //     const { id } = req.params;
-//     const deleted = await Opportunity.findByIdAndDelete(id);
+//     const deleted = await ProspectDetail.findByIdAndDelete(id);
 //     if (!deleted)
 //       return res
 //         .status(404)
-//         .json({ success: false, message: "Opportunity not found" });
+//         .json({ success: false, message: "ProspectDetail not found" });
 //     res.json({ success: true, message: "Deleted successfully" });
 //   } catch (err) {
 //     next(err);
@@ -30,10 +30,10 @@
 // };
 
 
-const Opportunity = require("../models/Opportunity");
+const ProspectDetail = require("../models/prospectDetail");
 const cloudinary = require("../config/cloudinary");
 
-exports.createOpportunity = async (req, res, next) => {
+exports.createProspectDetail = async (req, res, next) => {
   try {
     const payload = req.body;
 
@@ -45,10 +45,10 @@ exports.createOpportunity = async (req, res, next) => {
       });
     }
 
-    // --- Upload DECK File to Cloudinary ---
+    // Upload DECK File to Cloudinary
     if (req.file) {
       const uploaded = await cloudinary.uploader.upload_stream(
-        { folder: "opportunity_decks" },
+        { folder: "prospectDetail_decks" },
         async (error, result) => {
           if (error) {
             console.error("Cloudinary upload error:", error);
@@ -63,8 +63,7 @@ exports.createOpportunity = async (req, res, next) => {
           payload.deck = result.secure_url;
           payload.deckPublicId = result.public_id;
 
-          // Now save the opportunity
-          const opp = new Opportunity(payload);
+          const opp = new ProspectDetail(payload);
           await opp.save();
 
           return res.status(201).json({ success: true, data: opp });
@@ -75,7 +74,7 @@ exports.createOpportunity = async (req, res, next) => {
       uploaded.end(req.file.buffer);
     } else {
       // No file uploaded — save normally
-      const opp = new Opportunity(payload);
+      const opp = new ProspectDetail(payload);
       await opp.save();
       return res.status(201).json({ success: true, data: opp });
     }
@@ -84,7 +83,7 @@ exports.createOpportunity = async (req, res, next) => {
   }
 };
 
-exports.getOpportunities = async (req, res, next) => {
+exports.getProspectDetails = async (req, res, next) => {
   try {
     const { page = 1, limit = 20, prospect, geo, rag } = req.query;
     const query = {};
@@ -96,11 +95,11 @@ exports.getOpportunities = async (req, res, next) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const [items, total] = await Promise.all([
-      Opportunity.find(query)
+      ProspectDetail.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit)),
-      Opportunity.countDocuments(query),
+      ProspectDetail.countDocuments(query),
     ]);
 
     res.json({
@@ -113,14 +112,14 @@ exports.getOpportunities = async (req, res, next) => {
   }
 };
 
-exports.deleteOpportunity = async (req, res, next) => {
+exports.deleteProspectDetail = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Fetch the opportunity first
-    const opp = await Opportunity.findById(id);
+    // Fetch the ProspectDetail 
+    const opp = await ProspectDetail.findById(id);
     if (!opp) {
-      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+      return res.status(404).json({ success: false, message: 'ProspectDetail not found' });
     }
 
     // Delete file from Cloudinary if exists
@@ -134,7 +133,7 @@ exports.deleteOpportunity = async (req, res, next) => {
     }
 
     // Delete document from MongoDB
-    await Opportunity.findByIdAndDelete(id);
+    await ProspectDetail.findByIdAndDelete(id);
 
     res.json({ success: true, message: 'Deleted successfully' });
 
@@ -144,32 +143,32 @@ exports.deleteOpportunity = async (req, res, next) => {
 };
 
 
-exports.getOpportunityById = async (req, res, next) => {
+exports.getProspectDetailById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const opp = await Opportunity.findById(id);
+    const opp = await ProspectDetail.findById(id);
     if (!opp)
       return res
         .status(404)
-        .json({ success: false, message: "Opportunity not found" });
+        .json({ success: false, message: "ProspectDetail not found" });
     res.json({ success: true, data: opp });
   } catch (err) {
     next(err);
   }
 };
 
-exports.updateOpportunity = async (req, res, next) => {
+exports.updateProspectDetail = async (req, res, next) => {
   try {
     const { id } = req.params;
     const payload = req.body;
-    const opp = await Opportunity.findByIdAndUpdate(id, payload, {
+    const opp = await ProspectDetail.findByIdAndUpdate(id, payload, {
       new: true,
       runValidators: true,
     });
     if (!opp)
       return res
         .status(404)
-        .json({ success: false, message: "Opportunity not found" });
+        .json({ success: false, message: "ProspectDetail not found" });
     res.json({ success: true, data: opp });
   } catch (err) {
     next(err);

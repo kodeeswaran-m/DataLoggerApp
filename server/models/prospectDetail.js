@@ -5,7 +5,7 @@ const CallSchema = new mongoose.Schema({
   notes: { type: String, trim: true, default: '' }
 }, { _id: false });
 
-const OpportunitySchema = new mongoose.Schema({
+const ProspectDetailSchema = new mongoose.Schema({
   month: { type: String, trim: true, required: true },
   quarter: { type: String, trim: true, required: true },
   prospect: { type: String, trim: true, required: true },
@@ -32,9 +32,9 @@ const OpportunitySchema = new mongoose.Schema({
 });
 
 // Update updatedAt on save/update
-OpportunitySchema.pre('save', function(next) {
+ProspectDetailSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Opportunity', OpportunitySchema);
+module.exports = mongoose.model('ProspectDetail', ProspectDetailSchema);
