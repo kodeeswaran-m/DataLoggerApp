@@ -14,13 +14,18 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      {/* Header */}
       <div className="sidebar-header">
-        <span className="sidebar-logo">{collapsed ? "D" : "Dashboard"}</span>
-        <button className="collapse-btn" onClick={toggleSidebar}>
+        <span className="sidebar-logo">{collapsed ? "" : "Dashboard"}</span>
+        <button
+          className={`collapse-btn ${collapsed ? "rotated" : ""}`}
+          onClick={toggleSidebar}
+        >
           <FaBars />
         </button>
       </div>
 
+      {/* Menu */}
       <ul className="sidebar-menu">
         <li
           className={activeMenu === "demo" ? "active" : ""}
@@ -53,6 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
         </li>
       </ul>
 
+      {/* Footer */}
       <div className="sidebar-footer">© 2025 Your Company</div>
     </aside>
   );
