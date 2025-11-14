@@ -6,7 +6,7 @@
   background: linear-gradient(135deg, #eef2ff, #e0f2fe);
   min-height: 100vh;
 }
- 
+
 /* ------------------- Demo Card ------------------- */
 .demo-card {
   width: 100%;
@@ -20,60 +20,68 @@
   border-left: 6px solid #2563eb;
   animation: fadeIn 0.3s ease;
 }
- 
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
- 
+
 .demo-card h1 {
   font-size: 26px;
   font-weight: 800;
   color: #1e3a8a;
   margin-bottom: 25px;
 }
- 
-/* ------------------- Form Grid (Landscape) ------------------- */
+
+/* ------------------- Form Grid ------------------- */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 22px 26px;
+  gap: 24px;
 }
- 
+
 .form-grid .full {
   grid-column: 1 / -1;
 }
- 
+
 /* ------------------- Section Cards ------------------- */
 .section-card {
   grid-column: 1 / -1;
-  background: linear-gradient(120deg, #f0f9ff, #e0f2fe);
+  background: #f0f9ff;
   border-radius: 14px;
-  padding: 20px 25px;
+  padding: 22px 26px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   border: 1px solid #bae6fd;
 }
- 
+
 /* ------------------- Form Groups ------------------- */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  width: 100%;
 }
- 
+
 .form-group label {
   font-size: 14px;
   color: #1e40af;
   font-weight: 600;
+  margin-bottom: 6px;
 }
- 
-/* Universal modern input UI */
+
+/* Every input aligned – exact same width */
 .form-group input,
 .form-group textarea,
 .form-group select {
-  height: 42px;
+  width: 100%;
+  height: 44px;
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid #c7d2fe;
@@ -81,21 +89,21 @@
   font-size: 14px;
   color: #111827;
   transition: 0.25s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-sizing: border-box;
 }
- 
+
 .form-group textarea {
-  height: 90px;
+  height: 100px;
   resize: vertical;
 }
- 
+
 .form-group input:hover,
 .form-group textarea:hover,
 .form-group select:hover {
   border-color: #6366f1;
   background: #ffffff;
 }
- 
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
@@ -103,16 +111,20 @@
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
   outline: none;
 }
- 
-/* ------------------- Checkbox with Text ------------------- */
-.checkbox-text-wrapper {
-  margin-top: 8px;
+
+/* ------------------- Checkbox Fix ------------------- */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
 }
- 
-.checkbox-text-wrapper input {
-  width: 100%;
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
 }
- 
+
 /* ------------------- Buttons ------------------- */
 button.primary {
   background: linear-gradient(90deg, #2563eb, #3b82f6);
@@ -125,12 +137,12 @@ button.primary {
   transition: 0.25s ease;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
- 
+
 button.primary:hover {
   background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
   transform: translateY(-2px);
 }
- 
+
 button.ghost {
   background: white;
   border: 1px solid #94a3b8;
@@ -140,11 +152,11 @@ button.ghost {
   cursor: pointer;
   transition: 0.25s ease;
 }
- 
+
 button.ghost:hover {
   background: #f1f5f9;
 }
- 
+
 /* ------------------- Form Actions ------------------- */
 .form-actions {
   margin-top: 28px;
@@ -152,19 +164,22 @@ button.ghost:hover {
   justify-content: flex-end;
   gap: 15px;
 }
- 
+
 /* ------------------- Responsive ------------------- */
 @media (max-width: 1024px) {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .section-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
- 
+
 @media (max-width: 600px) {
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-card {
     grid-template-columns: 1fr;
   }
   .demo-card {
