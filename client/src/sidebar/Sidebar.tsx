@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
       </ul>
 
       {/* Footer */}
-      <div className="sidebar-footer">© 2025 Your Company</div>
+      <div className="sidebar-footer">© 2025 Aspire Systems</div>
     </aside>
   );
 };

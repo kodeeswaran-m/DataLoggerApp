@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, {  type ChangeEvent } from "react";
 
 export type BaseFieldProps<T> = {
   label: string;
@@ -6,7 +6,7 @@ export type BaseFieldProps<T> = {
   value?: T;
   required?: boolean;
   disabled?: boolean;
-  className?: string; 
+  className?: string;
 };
 
 export type TextFieldProps = BaseFieldProps<string> & {
@@ -60,11 +60,8 @@ export type DynamicFieldProps =
   | CheckboxWithTextProps;
 
 const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
-  const [showOptions, setShowOptions] = useState(false);
-
   const groupClass = `form-group ${props.className ?? ""}`;
 
-  // TEXT
   if (props.type === "text") {
     return (
       <div className={groupClass}>
@@ -83,7 +80,6 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
     );
   }
 
-  // TEXTAREA
   if (props.type === "textarea") {
     return (
       <div className={groupClass}>
@@ -93,7 +89,7 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
           name={props.name}
           value={props.value ?? ""}
           placeholder={props.placeholder}
-          rows={(props as TextAreaFieldProps).rows ?? 4}
+          rows={props.rows ?? 4}
           disabled={props.disabled}
           onChange={(e) => props.onChange?.(e.target.value)}
         />
@@ -101,7 +97,6 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
     );
   }
 
-  // SELECT
   if (props.type === "select") {
     return (
       <div className={groupClass}>
@@ -114,7 +109,7 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
           onChange={(e) => props.onChange?.(e.target.value)}
         >
           <option value="">-- Select --</option>
-          {(props as SelectFieldProps).options.map((o) => (
+          {props.options.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
@@ -124,43 +119,7 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
     );
   }
 
-  // COMBOBOX
-  if (props.type === "combobox") {
-    const comboProps = props as ComboBoxFieldProps;
-    return (
-      <div className={groupClass} style={{ position: "relative" }}>
-        <label htmlFor={props.name}>{props.label}</label>
-        <input
-          id={props.name}
-          name={props.name}
-          type="text"
-          autoComplete="off"
-          value={props.value ?? ""}
-          disabled={props.disabled}
-          onFocus={() => setShowOptions(true)}
-          onBlur={() => setTimeout(() => setShowOptions(false), 200)}
-          onChange={(e) => comboProps.onChange?.(e.target.value)}
-        />
-        {showOptions && (
-          <div className="combo-options">
-            {comboProps.options
-              .filter((opt) =>
-                opt.toLowerCase().includes((props.value ?? "").toLowerCase())
-              )
-              .map((opt) => (
-                <div key={opt} className="combo-item" onMouseDown={() => comboProps.onChange?.(opt)}>
-                  {opt}
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // FILE
   if (props.type === "file") {
-    const fileProps = props as FileFieldProps;
     return (
       <div className={groupClass}>
         <label htmlFor={props.name}>{props.label}</label>
@@ -170,40 +129,33 @@ const DynamicFormField: React.FC<DynamicFieldProps> = (props) => {
           type="file"
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0] ?? null;
-            fileProps.onChange?.(file ? file.name : "");
+            props.onChange?.(file ? file.name : "");
           }}
         />
       </div>
     );
   }
 
-  // CHECKBOX WITH TEXT
   if (props.type === "checkbox-with-text") {
-    const cbProps = props as CheckboxWithTextProps;
     return (
-      <div className={groupClass}>
-        <label>
+      <div className={`checkbox-row ${props.className ?? ""}`}>
+        <input
+          type="checkbox"
+          checked={props.checked}
+          disabled={props.disabled}
+          onChange={(e) => props.onChange?.(e.target.checked)}
+        />
+        <label>{props.label}</label>
+        {props.checked && (
           <input
-            type="checkbox"
-            checked={cbProps.checked}
-            disabled={cbProps.disabled}
-            onChange={(e) => cbProps.onChange?.(e.target.checked)}
-          />{" "}
-          {cbProps.label}
-        </label>
-
-        {cbProps.checked && (
-          <div className="checkbox-text-wrapper">
-            <label htmlFor={cbProps.textField.name}>{cbProps.textField.name}</label>
-            <input
-              id={cbProps.textField.name}
-              name={cbProps.textField.name}
-              type="text"
-              placeholder={cbProps.textField.placeholder}
-              value={cbProps.textField.value}
-              onChange={(e) => cbProps.onTextFieldChange?.(cbProps.textField.name, e.target.value)}
-            />
-          </div>
+            type="text"
+            placeholder={props.textField.placeholder}
+            value={props.textField.value}
+            onChange={(e) =>
+              props.onTextFieldChange?.(props.textField.name, e.target.value)
+            }
+            className="checkbox-note"
+          />
         )}
       </div>
     );
