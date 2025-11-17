@@ -1,88 +1,59 @@
-// exports.createProspectDetail = async (req, res, next) => {
-//   try {
-//     const payload = req.body;
-
-//     // Basic required fields check (you can enhance with express-validator)
-//     if (!payload.month || !payload.quarter || !payload.prospect) {
-//       return res.status(400).json({ success: false, message: 'month, quarter and prospect are required' });
-//     }
-
-//     const opp = new ProspectDetail(payload);
-//     await opp.save();
-
-//     res.status(201).json({ success: true, data: opp });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-// exports.deleteProspectDetail = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const deleted = await ProspectDetail.findByIdAndDelete(id);
-//     if (!deleted)
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "ProspectDetail not found" });
-//     res.json({ success: true, message: "Deleted successfully" });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
-
-const ProspectDetail = require("../models/prospectDetail");
+const ProspectDetail = require("../models/prospectDetailModel");
 const cloudinary = require("../config/cloudinary");
 
+// CREATE PROSPECT DETAIL
 exports.createProspectDetail = async (req, res, next) => {
   try {
-    const payload = req.body;
+    const payload = req.body || {};
 
-    // Basic validation
+    // Basic required fields validation
     if (!payload.month || !payload.quarter || !payload.prospect) {
       return res.status(400).json({
         success: false,
-        message: "month, quarter and prospect are required",
+        message: "month, quarter, and prospect are required",
       });
     }
 
-    // Upload DECK File to Cloudinary
-    if (req.file) {
-      const uploaded = await cloudinary.uploader.upload_stream(
-        { folder: "prospectDetail_decks" },
-        async (error, result) => {
-          if (error) {
-            console.error("Cloudinary upload error:", error);
-            return res.status(500).json({
-              success: false,
-              message: "File upload failed",
-            });
-          }
+    // Handle file upload
+  // Upload file to Cloudinary
+if (req.file && req.file.buffer) {
+  const uploaded = await new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "prospectDetail_decks", resource_type: "raw" }, // important
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(req.file.buffer);
+  });
 
-          // Save Cloudinary URL into payload
-          // payload.deck = result.secure_url;
-          payload.deck = result.secure_url;
-          payload.deckPublicId = result.public_id;
+  payload.deck = uploaded.secure_url;
+  payload.deckPublicId = uploaded.public_id;
+}
 
-          const opp = new ProspectDetail(payload);
-          await opp.save();
+    // Normalize call fields
+    ["call1", "call2", "call3"].forEach((call, idx) => {
+      const checkedKey = `${call}_checked`;
+      const notesKey = `${call}_notes`;
+      if (payload[checkedKey] !== undefined) {
+        payload[call] = {
+          checked: payload[checkedKey] === "true" || payload[checkedKey] === true,
+          notes: payload[notesKey] || "",
+        };
+      }
+    });
 
-          return res.status(201).json({ success: true, data: opp });
-        }
-      );
-
-      // pipe multer buffer to cloudinary upload
-      uploaded.end(req.file.buffer);
-    } else {
-      // No file uploaded — save normally
-      const opp = new ProspectDetail(payload);
-      await opp.save();
-      return res.status(201).json({ success: true, data: opp });
-    }
+    // Save to MongoDB
+    const prospect = await ProspectDetail.create(payload);
+    res.status(201).json({ success: true, data: prospect });
   } catch (err) {
+    console.error("createProspectDetail error:", err);
     next(err);
   }
 };
 
+// GET WITH PAGINATION + FILTERS
 exports.getProspectDetails = async (req, res, next) => {
   try {
     const { page = 1, limit = 20, prospect, geo, rag } = req.query;
@@ -92,87 +63,79 @@ exports.getProspectDetails = async (req, res, next) => {
     if (geo) query.geo = geo;
     if (rag) query.rag = rag;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 20;
+    const skip = (pageNum - 1) * limitNum;
 
     const [items, total] = await Promise.all([
-      ProspectDetail.find(query)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(parseInt(limit)),
+      ProspectDetail.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
       ProspectDetail.countDocuments(query),
     ]);
 
     res.json({
       success: true,
       data: items,
-      meta: { page: parseInt(page), limit: parseInt(limit), total },
+      meta: { page: pageNum, limit: limitNum, total },
     });
   } catch (err) {
     next(err);
   }
 };
 
-exports.deleteProspectDetail = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    // Fetch the ProspectDetail 
-    const opp = await ProspectDetail.findById(id);
-    if (!opp) {
-      return res.status(404).json({ success: false, message: 'ProspectDetail not found' });
-    }
-
-    // Delete file from Cloudinary if exists
-    if (opp.deckPublicId) {
-      try {
-        await cloudinary.uploader.destroy(opp.deckPublicId);
-        console.log("Cloudinary file deleted:", opp.deckPublicId);
-      } catch (error) {
-        console.error("Cloudinary delete error:", error);
-      }
-    }
-
-    // Delete document from MongoDB
-    await ProspectDetail.findByIdAndDelete(id);
-
-    res.json({ success: true, message: 'Deleted successfully' });
-
-  } catch (err) {
-    next(err);
-  }
-};
-
-
+// GET BY ID
 exports.getProspectDetailById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const opp = await ProspectDetail.findById(id);
-    if (!opp)
-      return res
-        .status(404)
-        .json({ success: false, message: "ProspectDetail not found" });
-    res.json({ success: true, data: opp });
+    const prospect = await ProspectDetail.findById(id);
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
+
+    res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
   }
 };
 
+// UPDATE
 exports.updateProspectDetail = async (req, res, next) => {
   try {
     const { id } = req.params;
     const payload = req.body;
-    const opp = await ProspectDetail.findByIdAndUpdate(id, payload, {
+
+    const prospect = await ProspectDetail.findByIdAndUpdate(id, payload, {
       new: true,
       runValidators: true,
     });
-    if (!opp)
-      return res
-        .status(404)
-        .json({ success: false, message: "ProspectDetail not found" });
-    res.json({ success: true, data: opp });
+
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
+
+    res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
   }
 };
 
+// DELETE
+exports.deleteProspectDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const prospect = await ProspectDetail.findById(id);
 
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
+
+    if (prospect.deckPublicId) {
+      try {
+        await cloudinary.uploader.destroy(prospect.deckPublicId);
+      } catch (err) {
+        console.error("Cloudinary destroy error:", err);
+      }
+    }
+
+    await ProspectDetail.findByIdAndDelete(id);
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
