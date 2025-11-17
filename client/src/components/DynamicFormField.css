@@ -1,0 +1,50 @@
+/* ========== Dynamic Form Field Styling ========== */
+
+/* EMPTY CELL */
+.empty-cell {
+  visibility: hidden;
+}
+
+/* FORM GROUP */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* CHECKBOX ROW */
+.checkbox-row {
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.thick-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* NOTE FIELD FOR CHECKBOX */
+.checkbox-note {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}

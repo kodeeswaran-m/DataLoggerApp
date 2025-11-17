@@ -1,5 +1,5 @@
 export type BaseFieldProps<T> = {
-  label: string;
+  label?: string;
   name: string;
   value?: T;
   required?: boolean;
@@ -7,14 +7,12 @@ export type BaseFieldProps<T> = {
   className?: string;
 };
 
-/* ---------------- TEXT FIELD ---------------- */
 export type TextFieldProps = BaseFieldProps<string> & {
   type: "text";
   placeholder?: string;
   onChange?: (value: string) => void;
 };
 
-/* ---------------- TEXTAREA ---------------- */
 export type TextAreaFieldProps = BaseFieldProps<string> & {
   type: "textarea";
   placeholder?: string;
@@ -22,28 +20,24 @@ export type TextAreaFieldProps = BaseFieldProps<string> & {
   onChange?: (value: string) => void;
 };
 
-/* ---------------- SELECT ---------------- */
 export type SelectFieldProps = BaseFieldProps<string> & {
   type: "select";
   options: { label: string; value: string }[];
   onChange?: (value: string) => void;
 };
 
-/* ---------------- COMBOBOX ---------------- */
 export type ComboBoxFieldProps = BaseFieldProps<string> & {
   type: "combobox";
   options: string[];
   onChange?: (value: string) => void;
 };
 
-/* ---------------- FILE FIELD ---------------- */
 export type FileFieldProps = BaseFieldProps<string> & {
   type: "file";
   onChange?: (fileName: string) => void;
   onFileSelect?: (file: File) => void;
 };
 
-/* ---------------- CHECKBOX + TEXT ---------------- */
 export type CheckboxWithTextProps = BaseFieldProps<boolean> & {
   type: "checkbox-with-text";
   checked: boolean;
@@ -56,11 +50,17 @@ export type CheckboxWithTextProps = BaseFieldProps<boolean> & {
   onTextFieldChange?: (value: string) => void;
 };
 
+export type EmptyFieldProps = {
+  type: "empty";
+  name: string;
+  className?: string;
+};
+
 export type DynamicFieldProps =
   | TextFieldProps
   | TextAreaFieldProps
   | SelectFieldProps
   | ComboBoxFieldProps
   | FileFieldProps
-  | CheckboxWithTextProps;
-
+  | CheckboxWithTextProps
+  | EmptyFieldProps;

@@ -1248,8 +1248,11 @@ export const createProspect = async (formData: FormData) => {
 
 
 
+------------------------------------------------------------------------------------------
 
 
+
+$env:NODE_TLS_REJECT_UNAUTHORIZED=0 
 
 
 

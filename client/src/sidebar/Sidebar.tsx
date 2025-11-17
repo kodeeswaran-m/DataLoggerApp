@@ -10,30 +10,28 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const toggleSidebar = () => setCollapsed(!collapsed);
-
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
       {/* Header */}
       <div className="sidebar-header">
         <span className="sidebar-logo">{collapsed ? "" : "Dashboard"}</span>
+
         <button
           className={`collapse-btn ${collapsed ? "rotated" : ""}`}
-          onClick={toggleSidebar}
+          onClick={() => setCollapsed(!collapsed)}
         >
-          <FaBars />
+          <FaBars color="#111" /> {/* Black icon */}
         </button>
       </div>
 
       {/* Menu */}
       <ul className="sidebar-menu">
+
         <li
           className={activeMenu === "demo" ? "active" : ""}
           onClick={() => onMenuClick?.("demo")}
         >
-          <span className="icon">
-            <FaHome />
-          </span>
+          <span className="icon"><FaHome color="#111" /></span>
           <span className="menu-text">Demo Page</span>
         </li>
 
@@ -41,9 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
           className={activeMenu === "report" ? "active" : ""}
           onClick={() => onMenuClick?.("report")}
         >
-          <span className="icon">
-            <FaFileAlt />
-          </span>
+          <span className="icon"><FaFileAlt color="#111" /></span>
           <span className="menu-text">Prospect Report</span>
         </li>
 
@@ -51,11 +47,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick, activeMenu }) => {
           className={activeMenu === "summary" ? "active" : ""}
           onClick={() => onMenuClick?.("summary")}
         >
-          <span className="icon">
-            <FaFileAlt />
-          </span>
+          <span className="icon"><FaFileAlt color="#111" /></span>
           <span className="menu-text">Prospect Summary</span>
         </li>
+
       </ul>
 
       {/* Footer */}

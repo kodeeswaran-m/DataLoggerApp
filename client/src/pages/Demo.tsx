@@ -1,11 +1,18 @@
+// frontend/src/pages/Demo.tsx
 import React, { useState } from "react";
 import DynamicFormField from "../components/DynamicFormField";
+import CategoryField from "../components/CategoryField";
 import type { DynamicFieldProps } from "../components/DynamicFormField.types";
 import { monthToQuarter } from "../quarter";
 import { createProspect } from "../services/ProspectDetailServices";
 import "./Demo.css";
 
 type CallKey = "call1" | "call2" | "call3";
+
+type CallSection = {
+  checked: boolean;
+  notes: string;
+};
 
 type FormValues = {
   month: string;
@@ -14,20 +21,23 @@ type FormValues = {
   geo: string;
   lob: string;
 
-  call1: { checked: boolean; notes: string };
-  call2: { checked: boolean; notes: string };
-  call3: { checked: boolean; notes: string };
+  call1: CallSection;
+  call2: CallSection;
+  call3: CallSection;
 
   coreOfferings: string;
   primaryNeed: string;
   secondaryNeed: string;
+
+  category: string;
+  categoryOther?: string;
+
   trace: string;
   salesSpoc: string;
-
   oppId: string;
   oppDetails: string;
 
-  deck: string; // file name only
+  deck: string;
   rag: string;
   remark: string;
 };
@@ -49,45 +59,38 @@ const Demo: React.FC = () => {
     coreOfferings: "",
     primaryNeed: "",
     secondaryNeed: "",
+
+    category: "",
+    categoryOther: "",
+
     trace: "",
     salesSpoc: "",
-
     oppId: "AUTO-GENERATED",
-    oppDetails: "System generated details",
+    oppDetails: "Generated automatically",
 
     deck: "",
     rag: "",
     remark: "",
   });
 
-  const updateValue = (name: keyof FormValues, value: string) => {
+  // ----------------- Helpers -----------------
+  const updateValue = (name: keyof FormValues, value: string | CallSection) => {
     setValues((prev) => ({
       ...prev,
-      [name]: value,
-      ...(name === "month" && { quarter: monthToQuarter(value) }),
+      [name]: name === "category" && Array.isArray(value) ? value[0] : value,
+      ...(name === "month" && { quarter: monthToQuarter(value as string) }),
     }));
   };
 
-  const updateCheckbox = (call: CallKey, checked: boolean) => {
-    setValues((prev) => ({
-      ...prev,
-      [call]: { ...prev[call], checked },
-    }));
+  const updateCheckbox = (key: CallKey, checked: boolean) => {
+    setValues((prev) => ({ ...prev, [key]: { ...prev[key], checked } }));
   };
 
-  const updateCheckboxText = (call: CallKey, notes: string) => {
-    setValues((prev) => ({
-      ...prev,
-      [call]: { ...prev[call], notes },
-    }));
+  const updateNotes = (key: CallKey, notes: string) => {
+    setValues((prev) => ({ ...prev, [key]: { ...prev[key], notes } }));
   };
 
-  const callFields = [
-    { name: "call1", label: "Call 1 - Discovery / Solutions" },
-    { name: "call2", label: "Call 2 - Solutions / Offerings" },
-    { name: "call3", label: "Call 3 - POC / Proposal" },
-  ] as const;
-
+  // ----------------- Dynamic Fields -----------------
   const fields: DynamicFieldProps[] = [
     {
       type: "select",
@@ -110,21 +113,8 @@ const Demo: React.FC = () => {
       ],
       onChange: (v) => updateValue("month", v),
     },
-    {
-      type: "text",
-      name: "quarter",
-      label: "Quarter",
-      value: values.quarter,
-      disabled: true,
-    },
-    {
-      type: "text",
-      name: "prospect",
-      label: "Prospect",
-      value: values.prospect,
-      placeholder: "Enter prospect name",
-      onChange: (v) => updateValue("prospect", v),
-    },
+    { type: "text", name: "quarter", label: "Quarter", value: values.quarter, disabled: true },
+    { type: "text", name: "prospect", label: "Prospect", value: values.prospect, onChange: (v) => updateValue("prospect", v) },
     {
       type: "select",
       name: "geo",
@@ -151,6 +141,35 @@ const Demo: React.FC = () => {
       ],
       onChange: (v) => updateValue("lob", v),
     },
+    // Calls
+    {
+      type: "checkbox-with-text",
+      name: "call1",
+      label: "Call 1 - Discovery",
+      checked: values.call1.checked,
+      textField: { name: "call1_notes", value: values.call1.notes },
+      onChange: (v) => updateCheckbox("call1", v),
+      onTextFieldChange: (v) => updateNotes("call1", v),
+    },
+    {
+      type: "checkbox-with-text",
+      name: "call2",
+      label: "Call 2 - Solutions",
+      checked: values.call2.checked,
+      textField: { name: "call2_notes", value: values.call2.notes },
+      onChange: (v) => updateCheckbox("call2", v),
+      onTextFieldChange: (v) => updateNotes("call2", v),
+    },
+    {
+      type: "checkbox-with-text",
+      name: "call3",
+      label: "Call 3 - POC/Proposal",
+      checked: values.call3.checked,
+      textField: { name: "call3_notes", value: values.call3.notes },
+      onChange: (v) => updateCheckbox("call3", v),
+      onTextFieldChange: (v) => updateNotes("call3", v),
+    },
+    // Offerings
     {
       type: "select",
       name: "coreOfferings",
@@ -165,31 +184,10 @@ const Demo: React.FC = () => {
       ],
       onChange: (v) => updateValue("coreOfferings", v),
     },
-    {
-      type: "text",
-      name: "primaryNeed",
-      label: "Primary Need",
-      value: values.primaryNeed,
-      placeholder: "Enter primary need",
-      onChange: (v) => updateValue("primaryNeed", v),
-    },
-    {
-      type: "text",
-      name: "secondaryNeed",
-      label: "Secondary Need",
-      value: values.secondaryNeed,
-      placeholder: "Enter secondary need",
-      onChange: (v) => updateValue("secondaryNeed", v),
-    },
-    {
-      type: "textarea",
-      name: "trace",
-      label: "Trace",
-      value: values.trace,
-      placeholder: "Enter trace",
-      onChange: (v) => updateValue("trace", v),
-      className: "full",
-    },
+    { type: "text", name: "primaryNeed", label: "Primary Need", value: values.primaryNeed, onChange: (v) => updateValue("primaryNeed", v) },
+    { type: "text", name: "secondaryNeed", label: "Secondary Need", value: values.secondaryNeed, onChange: (v) => updateValue("secondaryNeed", v) },
+    { type: "empty", name: "space1" },
+    { type: "textarea", name: "trace", label: "Trace", value: values.trace, className: "full", onChange: (v) => updateValue("trace", v) },
     {
       type: "select",
       name: "salesSpoc",
@@ -204,22 +202,8 @@ const Demo: React.FC = () => {
       onChange: (v) => updateValue("salesSpoc", v),
     },
     { type: "text", name: "oppId", label: "Opportunity ID", value: values.oppId, disabled: true },
-    {
-      type: "textarea",
-      name: "oppDetails",
-      label: "Opportunity Details",
-      value: values.oppDetails,
-      disabled: true,
-      className: "full",
-    },
-    {
-      type: "file",
-      name: "deck",
-      label: "Deck",
-      value: values.deck,
-      onChange: (name) => updateValue("deck", name),
-      onFileSelect: (selectedFile) => setFile(selectedFile),
-    },
+    { type: "textarea", name: "oppDetails", label: "Opportunity Details", value: values.oppDetails, disabled: true, className: "full" },
+    { type: "file", name: "deck", label: "Deck", value: values.deck, onChange: (v) => updateValue("deck", v), onFileSelect: (f) => setFile(f) },
     {
       type: "select",
       name: "rag",
@@ -232,77 +216,69 @@ const Demo: React.FC = () => {
       ],
       onChange: (v) => updateValue("rag", v),
     },
-    {
-      type: "text",
-      name: "remark",
-      label: "Remarks",
-      value: values.remark,
-      placeholder: "Enter remarks",
-      onChange: (v) => updateValue("remark", v),
-      className: "full",
-    },
+    { type: "empty", name: "space2" },
+    { type: "empty", name: "space3" },
+    { type: "text", name: "remark", label: "Remarks", value: values.remark, className: "full", onChange: (v) => updateValue("remark", v) },
   ];
 
+  // ----------------- Submit -----------------
   const handleSubmit = async () => {
-    const formData = new FormData();
-if (file) formData.append("deck", file);
+    const fd = new FormData();
 
+    if (file) fd.append("deck", file);
 
-    Object.entries(values).forEach(([key, val]) => {
-      if (typeof val === "string") {
-        formData.append(key, val);
-      }
+    // Append all string fields
+    Object.entries(values).forEach(([k, v]) => {
+      if (typeof v === "string") fd.append(k, v);
     });
 
-    // Append call stages
-    formData.append("call1_checked", String(values.call1.checked));
-    formData.append("call1_notes", values.call1.notes);
-    formData.append("call2_checked", String(values.call2.checked));
-    formData.append("call2_notes", values.call2.notes);
-    formData.append("call3_checked", String(values.call3.checked));
-    formData.append("call3_notes", values.call3.notes);
+    // Append calls
+    ["call1", "call2", "call3"].forEach((c) => {
+      const key = c as CallKey;
+      fd.append(`${c}_checked`, String(values[key].checked));
+      fd.append(`${c}_notes`, values[key].notes);
+    });
+
+    // Append category as string only
+    fd.append(
+      "category",
+      values.category === "other" ? values.categoryOther ?? "" : values.category
+    );
 
     try {
-      await createProspect(formData);
-      alert("Form Submitted Successfully!");
-    } catch (error) {
-      console.error("Submission Error:", error);
-      alert("Something went wrong!");
+      await createProspect(fd);
+      alert("Successfully Submitted!");
+      setValues((prev) => ({
+        ...prev,
+        prospect: "",
+        remark: "",
+        category: "",
+        categoryOther: "",
+      }));
+      setFile(null);
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting form");
     }
   };
 
   return (
     <div className="demo-wrapper">
       <main className="content-area">
-        <div className="header">
-          <h1>Prospect Entry Form</h1>
-        </div>
+        <h1 className="header">Prospect Entry Form</h1>
 
         <div className="form-grid">
-          {fields.map((field) => (
-            <DynamicFormField key={field.name} {...field} />
+          {fields.map((f) => (
+            <DynamicFormField key={f.name} {...f} />
           ))}
 
-          <div className="call-section full">
-            <h3 className="call-title">Call Stages</h3>
-            {callFields.map((c) => (
-              <div className="call-row" key={c.name}>
-                <label className="call-label">{c.label}</label>
-                <input
-                  type="checkbox"
-                  checked={values[c.name].checked}
-                  onChange={(e) => updateCheckbox(c.name, e.target.checked)}
-                />
-                <input
-                  type="text"
-                  className="call-notes"
-                  placeholder="Enter notes"
-                  value={values[c.name].notes}
-                  onChange={(e) => updateCheckboxText(c.name, e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
+          {/* Category Field */}
+          <CategoryField
+            value={values.category}
+            otherValue={values.categoryOther}
+            onChange={(v: string) => updateValue("category", v)}
+            onOtherChange={(v: string) => updateValue("categoryOther", v)}
+          />
 
           <div className="button-row full">
             <button className="submit-btn" onClick={handleSubmit}>

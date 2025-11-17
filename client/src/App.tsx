@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Sidebar from "./sidebar/Sidebar";
 import Demo from "./pages/Demo";
-import ProspectReport from "./reports/ProspectReport";
+// import ProspectReport from "./reports/ProspectReport";
 import "./App.css";
 import ProspectDetailsSummary from "./pages/ProspectDetailsSummary";
+import ProspectStackedChart from "./components/ProspectStackedChart";
 
 const App: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState("demo");
@@ -15,7 +16,7 @@ const App: React.FC = () => {
       <main className="main-content">
         {activeMenu === "demo" && <Demo />}
         {activeMenu === "report" && (
-          <ProspectReport />
+          <ProspectStackedChart />
         )}
         {activeMenu === "summary" && (
           <ProspectDetailsSummary />

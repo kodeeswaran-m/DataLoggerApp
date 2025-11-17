@@ -4,47 +4,54 @@ const cloudinary = require("../config/cloudinary");
 // CREATE PROSPECT DETAIL
 exports.createProspectDetail = async (req, res, next) => {
   try {
-    const payload = req.body || {};
+    const payload = { ...(req.body || {}) };
 
-    // Basic required fields validation
     if (!payload.month || !payload.quarter || !payload.prospect) {
-      return res.status(400).json({
-        success: false,
-        message: "month, quarter, and prospect are required",
-      });
+      return res.status(400).json({ success: false, message: "month, quarter, and prospect are required" });
     }
 
-    // Handle file upload
-  // Upload file to Cloudinary
-if (req.file && req.file.buffer) {
-  const uploaded = await new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "prospectDetail_decks", resource_type: "raw" }, // important
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }
-    );
-    stream.end(req.file.buffer);
-  });
+    if (req.file && req.file.buffer) {
+      const uploaded = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "prospectDetail_decks", resource_type: "raw" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
 
-  payload.deck = uploaded.secure_url;
-  payload.deckPublicId = uploaded.public_id;
-}
+      payload.deck = uploaded.secure_url;
+      payload.deckPublicId = uploaded.public_id;
+    }
 
     // Normalize call fields
-    ["call1", "call2", "call3"].forEach((call, idx) => {
+    ["call1", "call2", "call3"].forEach((call) => {
       const checkedKey = `${call}_checked`;
       const notesKey = `${call}_notes`;
       if (payload[checkedKey] !== undefined) {
         payload[call] = {
-          checked: payload[checkedKey] === "true" || payload[checkedKey] === true,
+          checked:
+            payload[checkedKey] === "true" ||
+            payload[checkedKey] === true ||
+            payload[checkedKey] === "on",
           notes: payload[notesKey] || "",
         };
       }
+      if (payload[call] && typeof payload[call] === "string") {
+        try {
+          payload[call] = JSON.parse(payload[call]);
+        } catch (e) { /* ignore */ }
+      }
     });
 
-    // Save to MongoDB
+    // If the client sent category = 'other' and categoryOther, keep categoryOther value
+    if (payload.category === "other" && payload.categoryOther) {
+      payload.category = payload.categoryOther;
+      delete payload.categoryOther;
+    }
+
     const prospect = await ProspectDetail.create(payload);
     res.status(201).json({ success: true, data: prospect });
   } catch (err) {
@@ -53,12 +60,11 @@ if (req.file && req.file.buffer) {
   }
 };
 
-// GET WITH PAGINATION + FILTERS
+// GET list (with basic filtering)
 exports.getProspectDetails = async (req, res, next) => {
   try {
     const { page = 1, limit = 100, prospect, geo, rag } = req.query;
     const query = {};
-
     if (prospect) query.prospect = { $regex: prospect, $options: "i" };
     if (geo) query.geo = geo;
     if (rag) query.rag = rag;
@@ -72,58 +78,36 @@ exports.getProspectDetails = async (req, res, next) => {
       ProspectDetail.countDocuments(query),
     ]);
 
-    res.json({
-      success: true,
-      data: items,
-      meta: { page: pageNum, limit: limitNum, total },
-    });
+    res.json({ success: true, data: items, meta: { page: pageNum, limit: limitNum, total } });
   } catch (err) {
     next(err);
   }
 };
 
-// GET BY ID
-exports.getProspectDetailById = async (req, res, next) => {
+exports.getProspectById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const prospect = await ProspectDetail.findById(id);
-    if (!prospect)
-      return res.status(404).json({ success: false, message: "Not found" });
-
+    const prospect = await ProspectDetail.findById(req.params.id);
+    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
   }
 };
 
-// UPDATE
-exports.updateProspectDetail = async (req, res, next) => {
+exports.updateProspect = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const payload = req.body;
-
-    const prospect = await ProspectDetail.findByIdAndUpdate(id, payload, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!prospect)
-      return res.status(404).json({ success: false, message: "Not found" });
-
+    const prospect = await ProspectDetail.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
   }
 };
 
-// DELETE
-exports.deleteProspectDetail = async (req, res, next) => {
+exports.deleteProspect = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const prospect = await ProspectDetail.findById(id);
-
-    if (!prospect)
-      return res.status(404).json({ success: false, message: "Not found" });
+    const prospect = await ProspectDetail.findById(req.params.id);
+    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
 
     if (prospect.deckPublicId) {
       try {
@@ -133,7 +117,7 @@ exports.deleteProspectDetail = async (req, res, next) => {
       }
     }
 
-    await ProspectDetail.findByIdAndDelete(id);
+    await ProspectDetail.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
     next(err);

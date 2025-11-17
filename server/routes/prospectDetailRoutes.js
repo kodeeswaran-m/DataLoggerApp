@@ -10,12 +10,12 @@ router.post("/", upload.single("deck"), controller.createProspectDetail);
 router.get("/", controller.getProspectDetails);
 
 // GET /api/prospectDetail/:id → get single
-router.get("/:id", controller.getProspectDetailById);
+router.get("/:id", controller.getProspectById);
 
 // PUT /api/prospectDetail/:id → update
-router.put("/:id", controller.updateProspectDetail);
+router.put("/:id", controller.updateProspect);
 
 // DELETE /api/prospectDetail/:id → delete
-router.delete("/:id", controller.deleteProspectDetail);
+router.delete("/:id", controller.deleteProspect);
 
 module.exports = router;
