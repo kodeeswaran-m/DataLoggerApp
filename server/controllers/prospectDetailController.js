@@ -1,35 +1,3 @@
-// exports.createProspectDetail = async (req, res, next) => {
-//   try {
-//     const payload = req.body;
-
-//     // Basic required fields check (you can enhance with express-validator)
-//     if (!payload.month || !payload.quarter || !payload.prospect) {
-//       return res.status(400).json({ success: false, message: 'month, quarter and prospect are required' });
-//     }
-
-//     const opp = new ProspectDetail(payload);
-//     await opp.save();
-
-//     res.status(201).json({ success: true, data: opp });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-// exports.deleteProspectDetail = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const deleted = await ProspectDetail.findByIdAndDelete(id);
-//     if (!deleted)
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "ProspectDetail not found" });
-//     res.json({ success: true, message: "Deleted successfully" });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
-
 const ProspectDetail = require("../models/prospectDetail");
 const cloudinary = require("../config/cloudinary");
 
