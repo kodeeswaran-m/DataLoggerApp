@@ -1,21 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const controller = require('../controllers/prospectDetailController');
-const upload = require('../middleware/upload');
+const controller = require("../controllers/prospectDetailController");
+const upload = require("../middleware/upload");
 
-// POST /api/ProspectDetail → with file upload
-router.post('/', upload.single('deck'), controller.createProspectDetail);
+// POST /api/prospectDetail → with file upload (field name: deck)
+router.post("/", upload.single("deck"), controller.createProspectDetail);
 
-// GET    /api/ProspectDetail         -> list (supports ?page=&limit=&prospect=&geo=&rag=)
-router.get('/', controller.getProspectDetails);
+// GET /api/prospectDetail → list (supports ?page=&limit=&prospect=&geo=&rag=)
+router.get("/", controller.getProspectDetails);
 
-// GET    /api/ProspectDetail/:id     -> get single
-router.get('/:id', controller.getProspectDetailById);
+// GET /api/prospectDetail/:id → get single
+router.get("/:id", controller.getProspectById);
 
-// PUT    /api/ProspectDetail/:id     -> update
-router.put('/:id', controller.updateProspectDetail);
+// PUT /api/prospectDetail/:id → update
+router.put("/:id", controller.updateProspect);
 
-// DELETE /api/ProspectDetail/:id     -> delete
-router.delete('/:id', controller.deleteProspectDetail);
+// DELETE /api/prospectDetail/:id → delete
+router.delete("/:id", controller.deleteProspect);
 
 module.exports = router;

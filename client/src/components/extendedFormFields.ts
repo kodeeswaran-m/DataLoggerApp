@@ -1,4 +1,5 @@
-import type { DynamicFieldProps } from "./DynamicFormField";
+import type { DynamicFieldProps } from "./DynamicFormField.types";
+
 
 /**
  * Extended form fields. This is a plain configuration list.
