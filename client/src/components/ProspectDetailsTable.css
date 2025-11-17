@@ -82,3 +82,14 @@
   border-radius: 6px;
   font-weight: 600;
 }
+
+
+
+/* Limit column width + allow wrapping */
+.opportunity-table th,
+.opportunity-table td {
+  max-width: 550px;      /* ⭐ Max allowed width */
+  white-space: normal;   /* ⭐ Allow text wrapping */
+  word-wrap: break-word; /* ⭐ Break long words */
+  word-break: break-word;
+}

@@ -10,7 +10,7 @@
 /* ------------------- Summary Card ------------------- */
 .summary-card {
   width: 100%;
-  max-width: 900px;
+  min-width: 100%;
   background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
@@ -21,8 +21,14 @@
 
 /* Same fade-in animation as Demo */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ------------------- Title ------------------- */
@@ -83,4 +89,50 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+/* ----------------- for column picker dropdown--------- */
+
+.column-picker-wrapper {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.column-picker-btn {
+  padding: 8px 14px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.column-picker-dropdown {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  width: 220px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.column-picker-item {
+  display: flex;
+  gap: 8px;
+  padding: 6px 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.column-picker {
+  display: "flex";
+  align-items: "center";
+  justify-content: center;
+  gap: 4;
 }

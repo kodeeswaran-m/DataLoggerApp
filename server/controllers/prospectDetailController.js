@@ -56,7 +56,7 @@ if (req.file && req.file.buffer) {
 // GET WITH PAGINATION + FILTERS
 exports.getProspectDetails = async (req, res, next) => {
   try {
-    const { page = 1, limit = 20, prospect, geo, rag } = req.query;
+    const { page = 1, limit = 100, prospect, geo, rag } = req.query;
     const query = {};
 
     if (prospect) query.prospect = { $regex: prospect, $options: "i" };
