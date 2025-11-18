@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import About from "../pages/About";
-import Contact from "../pages/Contact";
 import ProspectDetailsSummary from "../pages/ProspectDetailsSummary/ProspectDetailsSummary";
+import ProspectDetailForm from "../pages/ProspectDetailForm/ProspectDetailForm";
 
 
 const AppRoutes = () => {
@@ -9,7 +9,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<ProspectDetailsSummary />} />
       <Route path="/summary" element={<About />} />
-      <Route path="/form" element={<Contact />} />
+      <Route path="/form" element={<ProspectDetailForm />} />
     </Routes>
   );
 };

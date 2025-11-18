@@ -1,5 +1,6 @@
 // services/ProspectDetailServices.ts
 import axios from "axios";
+export type ProspectPayload = FormData; // since we upload file
 
 const API_URL = "http://localhost:5000/api/ProspectDetail";
 
@@ -30,6 +31,15 @@ export const deleteProspect = async (id: string) => {
   return res.data;
 };
 
+
+
+// POST with multipart/form-data
+export const createProspectDetail = async (data: ProspectPayload) => {
+  const res = await axios.post(API_URL, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
 
 
 
