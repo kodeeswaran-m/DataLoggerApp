@@ -1,3 +1,4 @@
+// CategoryField.tsx
 import React from "react";
 import "./CategoryField.css";
 
@@ -19,7 +20,6 @@ const CategoryField: React.FC<CategoryFieldProps> = ({
       <label>Category</label>
 
       <select value={value} onChange={(e) => onChange(e.target.value)}>
-        {/* Placeholder option instead of placeholder attribute */}
         <option value="" disabled hidden>
           Choose category
         </option>
