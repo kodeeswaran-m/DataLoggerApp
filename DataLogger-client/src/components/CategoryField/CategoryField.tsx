@@ -26,52 +26,13 @@ const CategoryField: React.FC<CategoryFieldProps> = ({
 
         <option value="">-- Select Category --</option>
 
-        <optgroup label="Claims & Ops">
-          <option value="Claims">Claims</option>
-          <option value="Underwriting">Underwriting (UW)</option>
-          <option value="Customer Experience">Customer Experience (CX)</option>
-          <option value="Fraud Detection">Fraud Detection</option>
-          <option value="FNOL Automation">FNOL Automation</option>
-          <option value="Product Comparison">Product Comparison</option>
-          <option value="Account Management">Account Management</option>
-          <option value="Rulebook Development">Rulebook Development</option>
-          <option value="NA">NA</option>
-        </optgroup>
-
-        <optgroup label="Guidewire / COTS / Platform">
-          <option value="Guidewire - Capabilities">Guidewire (Capabilities)</option>
-          <option value="Guidewire - Testing">Guidewire (Testing)</option>
-          <option value="Guidewire - Platform Offering">Guidewire (Platform Offering)</option>
-          <option value="Guidewire - Customer Engage">Guidewire (Customer Engage)</option>
-          <option value="COTS - Adaptive Pricing">COTS (Adaptive Pricing)</option>
-          <option value="COTS - Medical Document Parsing">COTS (Medical Document Parsing)</option>
-          <option value="CloudOps">CloudOps</option>
-          <option value="Core Modernization">Core Modernization</option>
-          <option value="API Integration">API Integration</option>
-          <option value="Cyber Security">Cyber Security</option>
-          <option value="Software Engineering">Software Engineering Capabilities</option>
-          <option value="NA">NA</option>
-        </optgroup>
-
-        <optgroup label="AI / Data">
-          <option value="Agentic AI">Agentic AI</option>
-          <option value="AI Accelerators">AI Accelerators</option>
-          <option value="AI Capabilities">AI Capabilities</option>
-          <option value="AI Solutions">AI Solutions</option>
-          <option value="AI Use Cases">AI Use Cases</option>
-          <option value="GenAI">GenAI</option>
-          <option value="Data & Analytics">Data & Analytics (D&A)</option>
-          <option value="NA">NA</option>
-        </optgroup>
-
-        <optgroup label="Insurance Specific / Other">
-          <option value="Claims Workflow Orchestration">Claims Workflow Orchestration</option>
-          <option value="Reinsurance">Reinsurance</option>
-          <option value="UBI">UBI</option>
-          <option value="Cross-Sell/Upsell">Cross-Sell / Upsell</option>
-          <option value="Insurance Capabilities">Insurance Capabilities</option>
-          <option value="NA">NA</option>
-        </optgroup>
+        {/* Only EXACT items you requested */}
+        <option value="Generic AI">Generic AI</option>
+        <option value="Gen AI , Agentic AI">Gen AI , Agentic AI</option>
+        <option value="COTS and Integration">COTS and Integration</option>
+        <option value="Insurance Core Offerings">Insurance Core Offerings</option>
+        <option value="Tech Needs">Tech Needs</option>
+        <option value="NA">NA</option>
 
         <option value="other">Other (type manually)</option>
       </select>
