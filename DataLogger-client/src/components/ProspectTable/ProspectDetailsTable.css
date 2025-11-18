@@ -1,0 +1,105 @@
+/* ---------- Container (Enables horizontal scroll) ---------- */
+.custom-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ---------- Table Structure ---------- */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: max-content; /* Allows horizontal scroll */
+  table-layout: auto;
+}
+
+/* ---------- Header ---------- */
+.table-header-row th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.table-header-row th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.table-header-cell {
+  background: #f3f4f6;
+  padding: 12px 16px;
+  color: #111827;
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 2px solid #e5e7eb;
+  text-align: left;
+
+  /* Column max width */
+  max-width: 500px;
+
+  /* Prevent header from wrapping (optional) */
+  white-space: nowrap;
+}
+
+/* ---------- Body ---------- */
+.table-body-cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 12px;
+
+  /* Allow vertical expansion, not horizontal */
+  white-space: normal;
+  word-break: break-word;
+
+  /* Prevent column from stretching past 500px */
+  max-width: 500px;
+}
+
+/* Hover effect */
+.table-body-row:hover {
+  background-color: #eef6ff;
+  transition: 0.2s;
+}
+/* clickable icon link */
+.deck-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.deck-icon {
+  width: 18px;
+  height: 18px;
+  color: #2563eb;
+}
+
+.deck-icon:hover {
+  color: #1e40af;
+}
+
+/* center deck icon inside cell */
+.deck-cell {
+  text-align: center;
+}
+
+
+.actions-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-icon {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-icon:hover {
+  color: #1976d2; /* blue */
+}
+
+.delete-icon:hover {
+  color: #d32f2f; /* red */
+}

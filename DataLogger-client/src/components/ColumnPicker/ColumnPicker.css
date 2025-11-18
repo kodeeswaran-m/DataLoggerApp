@@ -1,0 +1,109 @@
+/* ---------- WRAPPER ---------- */
+.column-picker-wrapper {
+  position: relative;
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  margin-bottom: 0px;
+
+}
+
+/* ---------- PICKER BUTTON (matches filter-btn) ---------- */
+.column-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.column-picker-btn:hover {
+  background: #f3f3f3;
+  border-color: #bdbdbd;
+}
+
+/* ---------- DROPDOWN CONTAINER (matches .filter-menu) ---------- */
+.column-picker-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 240px;
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+  animation: fadeIn 0.18s ease;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* Fade-in animation like FilterDropdown */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- SINGLE ITEM (matches .filter-item) ---------- */
+.column-picker-item {
+  display: flex;
+  gap: 8px;
+  padding: 8px 4px;
+  font-size: 14px;
+  color: #000;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.column-picker-item:hover {
+  background: #e8e8e8;
+  border-radius: 6px;
+}
+
+/* ---------- Checkbox styles ---------- */
+.column-picker-item input[type="checkbox"] {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* ---------- HR Divider ---------- */
+.column-picker-dropdown hr {
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid #e2e2e2;
+}
+
+/* ---------- Scrollbar (matches FilterDropdown scrollbar) ---------- */
+.column-picker-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.column-picker-dropdown::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+/* ---------- Icons Opacity + Hover (same as filter icons) ---------- */
+.column-picker-btn svg,
+.column-picker-item svg {
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.column-picker-btn:hover svg,
+.column-picker-item:hover svg {
+  opacity: 1;
+}

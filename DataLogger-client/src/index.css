@@ -1,0 +1,13 @@
+/* GLOBAL RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global Font */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff; /* white content area */
+  color: #000; /* basic text color */
+}

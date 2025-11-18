@@ -60,29 +60,70 @@ exports.createProspectDetail = async (req, res, next) => {
   }
 };
 
-// GET list (with basic filtering)
 exports.getProspectDetails = async (req, res, next) => {
   try {
-    const { page = 1, limit = 100, prospect, geo, rag } = req.query;
+    const {
+      page = 1,
+      limit = 20,
+      search = "",
+      geo,
+      month,
+      quarter,
+      lob,
+      rag,
+    } = req.query;
+
     const query = {};
-    if (prospect) query.prospect = { $regex: prospect, $options: "i" };
+
+    // -----------------------------
+    // Text Search (Prospect name)
+    // -----------------------------
+    if (search) {
+      query.prospect = { $regex: search, $options: "i" };
+    }
+
+    // -----------------------------
+    // Filters
+    // -----------------------------
     if (geo) query.geo = geo;
+    if (month) query.month = month;
+    if (quarter) query.quarter = quarter;
+    if (lob) query.lob = lob;
     if (rag) query.rag = rag;
 
+    // -----------------------------
+    // Pagination
+    // -----------------------------
     const pageNum = parseInt(page, 10) || 1;
     const limitNum = parseInt(limit, 10) || 20;
     const skip = (pageNum - 1) * limitNum;
 
+    // -----------------------------
+    // Fetch Data
+    // -----------------------------
     const [items, total] = await Promise.all([
-      ProspectDetail.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+      ProspectDetail.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum),
+
       ProspectDetail.countDocuments(query),
     ]);
 
-    res.json({ success: true, data: items, meta: { page: pageNum, limit: limitNum, total } });
+    return res.json({
+      success: true,
+      data: items,
+      meta: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+      },
+    });
   } catch (err) {
     next(err);
   }
 };
+
 
 exports.getProspectById = async (req, res, next) => {
   try {

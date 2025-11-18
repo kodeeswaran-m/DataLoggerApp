@@ -1,0 +1,171 @@
+.sidebar {
+  background-color: #ebebeb;
+  width: 70px;
+  height: 100vh;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open {
+  width: 220px;
+}
+
+/* TOP SECTION */
+.top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+/* Top container */
+.logo-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* consistent spacing between logo and text */
+  padding: 6px 10px; /* internal spacing */
+  cursor: pointer;
+  min-height: 48px; /* prevents height jump */
+  position: relative;
+}
+
+/* Standard icon size for ALL icons */
+.icon-standard {
+  width: 24px !important;
+  height: 24px !important;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* App Logo when sidebar is open */
+.logo {
+  width: 28px !important;
+  height: 28px !important;
+  flex-shrink: 0;
+}
+
+/* App Name */
+.app-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  white-space: nowrap;
+}
+
+/* Right-side toggle icon */
+.toggle-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 4px;
+}
+
+/* Hover icon in collapsed mode */
+.hover-icon {
+  margin-left: auto;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.menu-item {
+  display: flex;
+  margin: 2px 0px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  width: 100%;
+  color: #000;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  font-weight: 500;
+}
+
+.menu-link:hover {
+  background: #d1d1d1;
+}
+
+.icon {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  margin-left: 16px;
+  font-size: 14px;
+  color: #000;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .app-name {
+    display: none;
+  }
+}
+.toggle-btn {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-btn:hover {
+  opacity: 1;
+}
+
+.menu-item.active .menu-link {
+  background: #ffffff !important;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: #000000;
+}
+.menu-item .menu-link {
+  /* opacity: 0.7;        */
+}
+.menu-item:not(.active) .menu-link:hover {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0.7;
+}
+.menu-item.active .icon,
+.menu-item.active .text {
+  color: #000;
+  font-weight: bold;
+  opacity: 1;
+}
+
+.menu-item:not(.active) .menu-link:hover .icon,
+.menu-item:not(.active) .menu-link:hover .text {
+  color: #000;
+}
+
+.icon-bdr:hover {
+  padding: 1px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0.7;
+}

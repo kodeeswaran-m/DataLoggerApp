@@ -1,0 +1,177 @@
+/* ---------- WRAPPER ---------- */
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+}
+
+/* ---------- FILTER BUTTON ---------- */
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: #f3f3f3;
+  border-color: #bdbdbd;
+}
+
+/* Badge showing number of active filters */
+.filter-badge {
+  margin-left: auto;
+  background: #000;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 10px;
+}
+
+/* ---------- MAIN DROPDOWN CONTAINER ---------- */
+.filter-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+  animation: fadeIn 0.18s ease;
+  overflow: hidden;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- LEFT MAIN MENU ---------- */
+.filter-main {
+  width: 140px;
+  background: #f5f5f5;
+  border-right: 1px solid #e1e1e1;
+  border-radius: 10px 0 0 10px;
+}
+
+.filter-item {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.filter-item:hover {
+  background: #e8e8e8;
+}
+
+/* Highlight active left item */
+.active-submenu {
+  background: #dcdcdc !important;
+  font-weight: 500;
+}
+
+/* ---------- RIGHT SUB MENU ---------- */
+.filter-submenu {
+  display: none;
+  width: 150px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 0 10px 10px 0;
+}
+
+/* Show submenu only when triggered */
+.filter-menu.show-submenu .filter-submenu {
+  display: block;
+}
+
+/* Scrollbar styling */
+.filter-submenu::-webkit-scrollbar {
+  width: 6px;
+}
+.filter-submenu::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+/* Active submenu choice */
+.active-filter {
+  background: #000 !important;
+  color: #fff !important;
+  font-weight: 500;
+}
+
+/* ---------- FIX: Remove right panel space when submenu is hidden ---------- */
+.filter-menu:not(.show-submenu) .filter-main {
+  border-radius: 10px !important;
+  border-right: none !important;
+}
+
+/* Dropdown always keeps full width to prevent menu shifting */
+.filter-menu {
+  width: 290px; /* 140px left menu + 150px submenu */
+}
+
+/* Hide submenu but keep space reserved */
+.filter-submenu {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.filter-menu.show-submenu .filter-submenu {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ---------- Icons Opacity ---------- */
+.filter-item svg,
+.filter-btn svg {
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.filter-item:hover svg,
+.filter-btn:hover svg {
+  opacity: 1;
+}
+
+.hover-icon {
+  opacity: 1 !important;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Small black dot indicator */
+.active-dot {
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%;
+  display: inline-block;
+}
