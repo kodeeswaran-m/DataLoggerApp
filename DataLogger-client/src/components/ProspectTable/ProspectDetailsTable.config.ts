@@ -25,11 +25,6 @@ export const columns = [
 
 ];
 
-// export type ProspectDetailsTableProps = {
-//   data: any[];
-//   selectedColumns: string[];
-// };
-
 export type ProspectDetailsTableProps = {
   data: any[];
   selectedColumns: string[];

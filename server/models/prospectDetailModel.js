@@ -19,7 +19,7 @@ const ProspectDetailSchema = new mongoose.Schema({
   secondaryNeed: { type: String, trim: true },
 
   // Category fields
- category: { type: [String], trim: true }, // now it's an array of strings
+ category: { type: String, trim: true }, // now it's an array of strings
 categoryOther: { type: String, trim: true },
 
 

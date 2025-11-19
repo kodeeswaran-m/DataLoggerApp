@@ -5,9 +5,13 @@ const cloudinary = require("../config/cloudinary");
 exports.createProspectDetail = async (req, res, next) => {
   try {
     const payload = { ...(req.body || {}) };
+    console.log("payload", payload);
 
     if (!payload.month || !payload.quarter || !payload.prospect) {
-      return res.status(400).json({ success: false, message: "month, quarter, and prospect are required" });
+      return res.status(400).json({
+        success: false,
+        message: "month, quarter, and prospect are required",
+      });
     }
 
     if (req.file && req.file.buffer) {
@@ -42,7 +46,9 @@ exports.createProspectDetail = async (req, res, next) => {
       if (payload[call] && typeof payload[call] === "string") {
         try {
           payload[call] = JSON.parse(payload[call]);
-        } catch (e) { /* ignore */ }
+        } catch (e) {
+          /* ignore */
+        }
       }
     });
 
@@ -51,7 +57,6 @@ exports.createProspectDetail = async (req, res, next) => {
       payload.category = payload.categoryOther;
       delete payload.categoryOther;
     }
-
     const prospect = await ProspectDetail.create(payload);
     res.status(201).json({ success: true, data: prospect });
   } catch (err) {
@@ -124,11 +129,215 @@ exports.getProspectDetails = async (req, res, next) => {
   }
 };
 
+exports.getCategoryGeoChartData = async (req, res, next) => {
+  try {
+    const result = await ProspectDetail.aggregate([
+      // 1. Only needed fields
+      {
+        $project: {
+          geo: 1,
+          category: 1,
+        },
+      },
+
+      // 2. Remove empty/null fields
+      {
+        $match: {
+          geo: { $exists: true, $ne: "" },
+          category: { $exists: true, $ne: "" },
+        },
+      },
+
+      // 3. Count records by geo + category
+      {
+        $group: {
+          _id: { geo: "$geo", category: "$category" },
+          count: { $sum: 1 },
+        },
+      },
+
+      // 4. Group again by geo, collecting all category-count pairs
+      {
+        $group: {
+          _id: "$_id.geo",
+          categoryCounts: {
+            $push: {
+              category: "$_id.category",
+              count: "$count",
+            },
+          },
+        },
+      },
+
+      // 5. Final clean object
+      {
+        $project: {
+          geo: "$_id",
+          categoryCounts: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    // Handle empty DB safely
+    if (!result || result.length === 0) {
+      return res.json({
+        success: true,
+        xAxis: [],
+        seriesLabels: [],
+        data: {},
+      });
+    }
+
+    // Unique geo labels → these will become seriesLabels
+    const seriesLabels = result.map((r) => r.geo);
+
+    // Unique categories → these will become xAxis
+    const xAxis = [
+      ...new Set(
+        result.flatMap((r) => (r.categoryCounts || []).map((c) => c.category))
+      ),
+    ].sort(); // optional: sort for consistency
+
+    // Build data object
+    const data = {};
+    seriesLabels.forEach((geo) => {
+      const geoRecord = result.find((r) => r.geo === geo);
+      const categoryCounts = geoRecord?.categoryCounts || [];
+      data[geo] = xAxis.map((cat) => {
+        const found = categoryCounts.find((c) => c.category === cat);
+        return found ? found.count : 0;
+      });
+    });
+
+    // Send response
+    return res.json({
+      success: true,
+      xAxis,
+      seriesLabels,
+      data,
+      filterNames: ["Categories", "Geo"],
+    });
+  } catch (err) {
+    console.error("Category-Geo Chart Error:", err);
+    next(err);
+  }
+};
+
+exports.getCategoryMonthChartData = async (req, res, next) => {
+  try {
+    const result = await ProspectDetail.aggregate([
+      // 1. Only required fields
+      {
+        $project: {
+          category: 1,
+          month: 1,
+        },
+      },
+
+      // 2. Remove empty values
+      {
+        $match: {
+          category: { $exists: true, $ne: "" },
+          month: { $exists: true, $ne: "" },
+        },
+      },
+
+      // 3. Group by category + month
+      {
+        $group: {
+          _id: { category: "$category", month: "$month" },
+          count: { $sum: 1 },
+        },
+      },
+
+      // 4. Group again by category → collect all month-count pairs
+      {
+        $group: {
+          _id: "$_id.category",
+          monthCounts: {
+            $push: {
+              month: "$_id.month",
+              count: "$count",
+            },
+          },
+        },
+      },
+
+      // 5. Final formatting
+      {
+        $project: {
+          category: "$_id",
+          monthCounts: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    // Handle empty DB
+    if (!result || result.length === 0) {
+      return res.json({
+        success: true,
+        xAxis: [],
+        seriesLabels: [],
+        data: {},
+      });
+    }
+
+    // Unique categories
+    const seriesLabels = result.map((r) => r.category);
+
+    // Unique months (sorted)
+    const xAxis = [
+      ...new Set(result.flatMap((r) => r.monthCounts.map((m) => m.month))),
+    ].sort((a, b) => {
+      const monthOrder = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+    });
+
+    // Build final data object
+    const data = {};
+    seriesLabels.forEach((category) => {
+      const record = result.find((r) => r.category === category);
+      const monthCounts = record?.monthCounts || [];
+      data[category] = xAxis.map((month) => {
+        const found = monthCounts.find((m) => m.month === month);
+        return found ? found.count : 0;
+      });
+    });
+
+    // Return response with renamed keys
+    return res.json({
+      success: true,
+      xAxis,
+      seriesLabels,
+      data,
+      filterNames: ["Month","Categories"],
+    });
+  } catch (err) {
+    console.error("Category-Month Chart Error:", err);
+    next(err);
+  }
+};
 
 exports.getProspectById = async (req, res, next) => {
   try {
     const prospect = await ProspectDetail.findById(req.params.id);
-    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
@@ -137,8 +346,13 @@ exports.getProspectById = async (req, res, next) => {
 
 exports.updateProspect = async (req, res, next) => {
   try {
-    const prospect = await ProspectDetail.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
+    const prospect = await ProspectDetail.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data: prospect });
   } catch (err) {
     next(err);
@@ -148,7 +362,8 @@ exports.updateProspect = async (req, res, next) => {
 exports.deleteProspect = async (req, res, next) => {
   try {
     const prospect = await ProspectDetail.findById(req.params.id);
-    if (!prospect) return res.status(404).json({ success: false, message: "Not found" });
+    if (!prospect)
+      return res.status(404).json({ success: false, message: "Not found" });
 
     if (prospect.deckPublicId) {
       try {

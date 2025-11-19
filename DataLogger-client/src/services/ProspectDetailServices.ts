@@ -35,6 +35,7 @@ export const deleteProspect = async (id: string) => {
 
 // POST with multipart/form-data
 export const createProspectDetail = async (data: ProspectPayload) => {
+  console.log("form data from service", data);
   const res = await axios.post(API_URL, data, {
     headers: { "Content-Type": "multipart/form-data" },
   });

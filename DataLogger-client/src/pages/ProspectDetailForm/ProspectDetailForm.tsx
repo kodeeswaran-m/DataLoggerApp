@@ -46,31 +46,31 @@ const ProspectDetailForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const [values, setValues] = useState<FormValues>({
-    month: "",
-    quarter: "",
-    prospect: "",
-    geo: "",
-    lob: "",
+    month: "January",
+    quarter: "Q1",
+    prospect: "aaaaaaa",
+    geo: "Europe",
+    lob: "life",
 
-    call1: { checked: false, notes: "" },
+    call1: { checked: false, notes: "aaaaaaaaaaaaaaa" },
     call2: { checked: false, notes: "" },
     call3: { checked: false, notes: "" },
 
-    coreOfferings: "",
-    primaryNeed: "",
-    secondaryNeed: "",
+    coreOfferings: "productDev",
+    primaryNeed: "aaaaaaaaaaaaa",
+    secondaryNeed: "aaaaaaaaaaaa",
 
-    category: "",
+    category: "Generic AI",
     categoryOther: "",
 
-    trace: "",
-    salesSpoc: "",
+    trace: "aaaaaaaaaaaa",
+    salesSpoc: "sanjay",
     oppId: "AUTO-GENERATED",
     oppDetails: "Generated automatically",
 
     deck: "",
     rag: "",
-    remark: "",
+    remark: "nulllll",
   });
 
   // ----------------- Helpers -----------------
@@ -118,9 +118,21 @@ const ProspectDetailForm: React.FC = () => {
     },
 
     // quarter is auto-filled when month changes
-    { type: "text", name: "quarter", label: "Quarter", value: values.quarter, disabled: true },
+    {
+      type: "text",
+      name: "quarter",
+      label: "Quarter",
+      value: values.quarter,
+      disabled: true,
+    },
 
-    { type: "text", name: "prospect", label: "Prospect", value: values.prospect, onChange: (v) => updateValue("prospect", v) },
+    {
+      type: "text",
+      name: "prospect",
+      label: "Prospect",
+      value: values.prospect,
+      onChange: (v) => updateValue("prospect", v),
+    },
 
     {
       type: "select",
@@ -157,7 +169,11 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call1",
       label: "Call 1 - Discovery",
-      textField: { name: "call1_notes", value: values.call1.notes, placeholder: "Notes for Call 1" },
+      textField: {
+        name: "call1_notes",
+        value: values.call1.notes,
+        placeholder: "Notes for Call 1",
+      },
       checked: values.call1.checked,
       onChange: (v) => updateCheckbox("call1", v),
       onTextFieldChange: (v) => updateNotes("call1", v),
@@ -167,7 +183,11 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call2",
       label: "Call 2 - Solutions",
-      textField: { name: "call2_notes", value: values.call2.notes, placeholder: "Notes for Call 2" },
+      textField: {
+        name: "call2_notes",
+        value: values.call2.notes,
+        placeholder: "Notes for Call 2",
+      },
       checked: values.call2.checked,
       onChange: (v) => updateCheckbox("call2", v),
       onTextFieldChange: (v) => updateNotes("call2", v),
@@ -177,7 +197,11 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call3",
       label: "Call 3 - POC/Proposal",
-      textField: { name: "call3_notes", value: values.call3.notes, placeholder: "Notes for Call 3" },
+      textField: {
+        name: "call3_notes",
+        value: values.call3.notes,
+        placeholder: "Notes for Call 3",
+      },
       checked: values.call3.checked,
       onChange: (v) => updateCheckbox("call3", v),
       onTextFieldChange: (v) => updateNotes("call3", v),
@@ -199,8 +223,20 @@ const ProspectDetailForm: React.FC = () => {
       onChange: (v) => updateValue("coreOfferings", v),
     },
 
-    { type: "text", name: "primaryNeed", label: "Primary Need", value: values.primaryNeed, onChange: (v) => updateValue("primaryNeed", v) },
-    { type: "text", name: "secondaryNeed", label: "Secondary Need", value: values.secondaryNeed, onChange: (v) => updateValue("secondaryNeed", v) },
+    {
+      type: "text",
+      name: "primaryNeed",
+      label: "Primary Need",
+      value: values.primaryNeed,
+      onChange: (v) => updateValue("primaryNeed", v),
+    },
+    {
+      type: "text",
+      name: "secondaryNeed",
+      label: "Secondary Need",
+      value: values.secondaryNeed,
+      onChange: (v) => updateValue("secondaryNeed", v),
+    },
 
     // Category inserted immediately after Secondary Need using a `custom` field
     {
@@ -217,7 +253,14 @@ const ProspectDetailForm: React.FC = () => {
     },
 
     { type: "empty", name: "space1" },
-    { type: "textarea", name: "trace", label: "Trace", value: values.trace, className: "full", onChange: (v) => updateValue("trace", v) },
+    {
+      type: "textarea",
+      name: "trace",
+      label: "Trace",
+      value: values.trace,
+      className: "full",
+      onChange: (v) => updateValue("trace", v),
+    },
 
     {
       type: "select",
@@ -234,11 +277,31 @@ const ProspectDetailForm: React.FC = () => {
     },
 
     // Auto/readonly fields
-    { type: "text", name: "oppId", label: "Opportunity ID", value: values.oppId, disabled: true },
-    { type: "textarea", name: "oppDetails", label: "Opportunity Details", value: values.oppDetails, disabled: true, className: "full" },
+    {
+      type: "text",
+      name: "oppId",
+      label: "Opportunity ID",
+      value: values.oppId,
+      disabled: true,
+    },
+    {
+      type: "textarea",
+      name: "oppDetails",
+      label: "Opportunity Details",
+      value: values.oppDetails,
+      disabled: true,
+      className: "full",
+    },
 
     // Deck upload
-    { type: "file", name: "deck", label: "Deck", value: values.deck, onChange: (v) => updateValue("deck", v), onFileSelect: (f) => setFile(f) },
+    {
+      type: "file",
+      name: "deck",
+      label: "Deck",
+      value: values.deck,
+      onChange: (v) => updateValue("deck", v),
+      onFileSelect: (f) => setFile(f),
+    },
 
     {
       type: "select",
@@ -255,7 +318,14 @@ const ProspectDetailForm: React.FC = () => {
 
     { type: "empty", name: "space2" },
     { type: "empty", name: "space3" },
-    { type: "text", name: "remark", label: "Remarks", value: values.remark, className: "full", onChange: (v) => updateValue("remark", v) },
+    {
+      type: "text",
+      name: "remark",
+      label: "Remarks",
+      value: values.remark,
+      className: "full",
+      onChange: (v) => updateValue("remark", v),
+    },
   ];
 
   // ----------------- Submit -----------------
@@ -263,7 +333,9 @@ const ProspectDetailForm: React.FC = () => {
     try {
       // Basic client-side validation for required fields
       if (!values.month || !values.quarter || !values.prospect) {
-        alert("Please fill Month, Quarter (auto), and Prospect before submitting.");
+        alert(
+          "Please fill Month, Quarter (auto), and Prospect before submitting."
+        );
         return;
       }
 
@@ -288,8 +360,13 @@ const ProspectDetailForm: React.FC = () => {
       });
 
       // Category should be a single string — if "other", send the other text
-      fd.append("category", values.category === "other" ? values.categoryOther ?? "" : values.category);
-
+      fd.set(
+        "category",
+        values.category === "other"
+          ? values.categoryOther ?? ""
+          : values.category
+      );
+      console.log("FDDDDDDDDDDD", fd);
       await createProspectDetail(fd);
 
       alert("Successfully Submitted!");

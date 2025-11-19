@@ -3,6 +3,11 @@ const router = express.Router();
 const controller = require("../controllers/prospectDetailController");
 const upload = require("../middleware/upload");
 
+
+router.get("/chart-data", controller.getCategoryGeoChartData);
+
+router.get("/chart-data-month", controller.getCategoryMonthChartData);
+
 // POST /api/prospectDetail → with file upload (field name: deck)
 router.post("/", upload.single("deck"), controller.createProspectDetail);
 
