@@ -88,8 +88,41 @@ const ProspectDetailForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<FormValues>(emptyValues);
 
+<<<<<<< HEAD
   // update helper (works with nested call objects)
   const updateValue = <K extends keyof FormValues>(name: K, value: FormValues[K]) => {
+=======
+  const [values, setValues] = useState<FormValues>({
+    month: "January",
+    quarter: "Q1",
+    prospect: "aaaaaaa",
+    geo: "Europe",
+    lob: "life",
+
+    call1: { checked: false, notes: "aaaaaaaaaaaaaaa" },
+    call2: { checked: false, notes: "" },
+    call3: { checked: false, notes: "" },
+
+    coreOfferings: "productDev",
+    primaryNeed: "aaaaaaaaaaaaa",
+    secondaryNeed: "aaaaaaaaaaaa",
+
+    category: "Generic AI",
+    categoryOther: "",
+
+    trace: "aaaaaaaaaaaa",
+    salesSpoc: "sanjay",
+    oppId: "AUTO-GENERATED",
+    oppDetails: "Generated automatically",
+
+    deck: "",
+    rag: "",
+    remark: "nulllll",
+  });
+
+  // ----------------- Helpers -----------------
+  const updateValue = (name: keyof FormValues, value: string) => {
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
     setValues((prev) => {
       const next = { ...prev, [name]: value } as FormValues;
       if (name === "month") next.quarter = monthToQuarter(value as unknown as string);
@@ -190,8 +223,29 @@ const ProspectDetailForm: React.FC = () => {
       ],
       onChange: (v) => updateValue("month", v as FormValues["month"]),
     },
+<<<<<<< HEAD
     { type: "text", name: "quarter", label: "Quarter", value: values.quarter, disabled: true },
     { type: "text", name: "prospect", label: "Prospect", value: values.prospect, onChange: (v) => updateValue("prospect", v as FormValues["prospect"]) },
+=======
+
+    // quarter is auto-filled when month changes
+    {
+      type: "text",
+      name: "quarter",
+      label: "Quarter",
+      value: values.quarter,
+      disabled: true,
+    },
+
+    {
+      type: "text",
+      name: "prospect",
+      label: "Prospect",
+      value: values.prospect,
+      onChange: (v) => updateValue("prospect", v),
+    },
+
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
     {
       type: "select",
       name: "geo",
@@ -226,6 +280,14 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call1",
       label: "Call 1 - Discovery",
+<<<<<<< HEAD
+=======
+      textField: {
+        name: "call1_notes",
+        value: values.call1.notes,
+        placeholder: "Notes for Call 1",
+      },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
       checked: values.call1.checked,
       textField: { name: "call1.notes", value: values.call1.notes, placeholder: "Notes for Call 1" },
       onChange: (v) => updateValue("call1", { ...values.call1, checked: v } as FormValues["call1"]),
@@ -235,6 +297,14 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call2",
       label: "Call 2 - Solutions",
+<<<<<<< HEAD
+=======
+      textField: {
+        name: "call2_notes",
+        value: values.call2.notes,
+        placeholder: "Notes for Call 2",
+      },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
       checked: values.call2.checked,
       textField: { name: "call2.notes", value: values.call2.notes, placeholder: "Notes for Call 2" },
       onChange: (v) => updateValue("call2", { ...values.call2, checked: v } as FormValues["call2"]),
@@ -244,6 +314,14 @@ const ProspectDetailForm: React.FC = () => {
       type: "checkbox-with-text",
       name: "call3",
       label: "Call 3 - POC/Proposal",
+<<<<<<< HEAD
+=======
+      textField: {
+        name: "call3_notes",
+        value: values.call3.notes,
+        placeholder: "Notes for Call 3",
+      },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
       checked: values.call3.checked,
       textField: { name: "call3.notes", value: values.call3.notes, placeholder: "Notes for Call 3" },
       onChange: (v) => updateValue("call3", { ...values.call3, checked: v } as FormValues["call3"]),
@@ -265,8 +343,25 @@ const ProspectDetailForm: React.FC = () => {
       onChange: (v) => updateValue("coreOfferings", v as FormValues["coreOfferings"]),
     },
 
+<<<<<<< HEAD
     { type: "text", name: "primaryNeed", label: "Primary Need", value: values.primaryNeed, onChange: (v) => updateValue("primaryNeed", v as FormValues["primaryNeed"]) },
     { type: "text", name: "secondaryNeed", label: "Secondary Need", value: values.secondaryNeed, onChange: (v) => updateValue("secondaryNeed", v as FormValues["secondaryNeed"]) },
+=======
+    {
+      type: "text",
+      name: "primaryNeed",
+      label: "Primary Need",
+      value: values.primaryNeed,
+      onChange: (v) => updateValue("primaryNeed", v),
+    },
+    {
+      type: "text",
+      name: "secondaryNeed",
+      label: "Secondary Need",
+      value: values.secondaryNeed,
+      onChange: (v) => updateValue("secondaryNeed", v),
+    },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
 
     {
       type: "custom",
@@ -281,7 +376,19 @@ const ProspectDetailForm: React.FC = () => {
       ),
     },
 
+<<<<<<< HEAD
     { type: "textarea", name: "trace", label: "Trace", value: values.trace, className: "full", onChange: (v) => updateValue("trace", v as FormValues["trace"]) },
+=======
+    { type: "empty", name: "space1" },
+    {
+      type: "textarea",
+      name: "trace",
+      label: "Trace",
+      value: values.trace,
+      className: "full",
+      onChange: (v) => updateValue("trace", v),
+    },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
 
     {
       type: "select",
@@ -297,16 +404,42 @@ const ProspectDetailForm: React.FC = () => {
       onChange: (v) => updateValue("salesSpoc", v as FormValues["salesSpoc"]),
     },
 
+<<<<<<< HEAD
     { type: "text", name: "oppId", label: "Opportunity ID", value: values.oppId, disabled: true },
     { type: "textarea", name: "oppDetails", label: "Opportunity Details", value: values.oppDetails, disabled: true, className: "full" },
 
+=======
+    // Auto/readonly fields
+    {
+      type: "text",
+      name: "oppId",
+      label: "Opportunity ID",
+      value: values.oppId,
+      disabled: true,
+    },
+    {
+      type: "textarea",
+      name: "oppDetails",
+      label: "Opportunity Details",
+      value: values.oppDetails,
+      disabled: true,
+      className: "full",
+    },
+
+    // Deck upload
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
     {
       type: "file",
       name: "deck",
       label: "Deck",
       value: values.deck,
+<<<<<<< HEAD
       onFileSelect: handleFileSelect,
       onChange: (v) => updateValue("deck", v as FormValues["deck"]),
+=======
+      onChange: (v) => updateValue("deck", v),
+      onFileSelect: (f) => setFile(f),
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
     },
 
     {
@@ -322,14 +455,29 @@ const ProspectDetailForm: React.FC = () => {
       onChange: (v) => updateValue("rag", v as FormValues["rag"]),
     },
 
+<<<<<<< HEAD
     { type: "text", name: "remark", label: "Remarks", value: values.remark, className: "full", onChange: (v) => updateValue("remark", v as FormValues["remark"]) },
+=======
+    { type: "empty", name: "space2" },
+    { type: "empty", name: "space3" },
+    {
+      type: "text",
+      name: "remark",
+      label: "Remarks",
+      value: values.remark,
+      className: "full",
+      onChange: (v) => updateValue("remark", v),
+    },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
   ];
 
   const handleSubmit = async () => {
     try {
       // minimal validation
       if (!values.month || !values.quarter || !values.prospect) {
-        alert("Please fill Month, Quarter (auto), and Prospect before submitting.");
+        alert(
+          "Please fill Month, Quarter (auto), and Prospect before submitting."
+        );
         return;
       }
 
@@ -349,6 +497,7 @@ const ProspectDetailForm: React.FC = () => {
       fd.append("call2", JSON.stringify(values.call2));
       fd.append("call3", JSON.stringify(values.call3));
 
+<<<<<<< HEAD
       // Category handling (strings only)
       // If dropdown selected "other", backend expects category = typed-other string
       // categoryOther stores the typed value (or blank)
@@ -359,6 +508,17 @@ const ProspectDetailForm: React.FC = () => {
         // use typed value
         finalCategory = catOtherSafe;
       }
+=======
+      // Category should be a single string — if "other", send the other text
+      fd.set(
+        "category",
+        values.category === "other"
+          ? values.categoryOther ?? ""
+          : values.category
+      );
+      console.log("FDDDDDDDDDDD", fd);
+      await createProspectDetail(fd);
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
 
       // Append category fields (single strings)
       fd.append("category", finalCategory);

@@ -17,9 +17,15 @@ const ProspectDetailSchema = new mongoose.Schema(
     geo: { type: String, trim: true, default: "" },
     lob: { type: String, trim: true, default: "" },
 
+<<<<<<< HEAD
     call1: { type: CallSchema, default: () => ({}) },
     call2: { type: CallSchema, default: () => ({}) },
     call3: { type: CallSchema, default: () => ({}) },
+=======
+  // Category fields
+ category: { type: String, trim: true }, // now it's an array of strings
+categoryOther: { type: String, trim: true },
+>>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
 
     coreOfferings: { type: String, trim: true, default: "" },
     primaryNeed: { type: String, trim: true, default: "" },
