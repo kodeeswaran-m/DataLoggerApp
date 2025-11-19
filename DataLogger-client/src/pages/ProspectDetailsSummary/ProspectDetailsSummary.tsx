@@ -1,13 +1,9 @@
-// pages/ProspectDetailsSummary/ProspectDetailsSummary.tsx
+// src/pages/ProspectDetailsSummary/ProspectDetailsSummary.tsx
 import { useEffect, useRef, useState, useCallback } from "react";
 import "./ProspectDetailsSummary.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
 import { columns } from "../../components/ProspectTable/ProspectDetailsTable.config";
-import {
-  deleteProspect,
-  fetchProspects,
-} from "../../services/ProspectDetailServices";
+import { deleteProspect, fetchProspects } from "../../services/ProspectDetailServices";
 import ProspectDetailsTable from "../../components/ProspectTable/ProspectDetailsTable";
 import SummaryToolbar from "../../components/SummaryToolbar/SummaryToolbar";
 import { CircularProgress } from "@mui/material";
@@ -15,7 +11,7 @@ import ConfirmDialog from "../../components/Common/ConfirmDialog";
 
 const LS_KEY = "prospect_params";
 
-const ProspectDetailsSummary = () => {
+const ProspectDetailsSummary: React.FC = () => {
   const saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -37,17 +33,8 @@ const ProspectDetailsSummary = () => {
     rag: urlFilters.rag || saved.filters?.rag || "",
   });
 
-  const DEFAULT_COLUMNS = [
-    "month",
-    "quarter",
-    "geo",
-    "prospect",
-    "lob",
-    "actions",
-  ];
-  const [selectedColumns, setSelectedColumns] = useState(
-    saved.selectedColumns || DEFAULT_COLUMNS
-  );
+  const DEFAULT_COLUMNS = ["month", "quarter", "geo", "prospect", "lob", "actions"];
+  const [selectedColumns, setSelectedColumns] = useState<string[]>(saved.selectedColumns || DEFAULT_COLUMNS);
 
   const [showPicker, setShowPicker] = useState(false);
   const [showSearch, setShowSearch] = useState(saved.showSearch || false);
@@ -61,137 +48,77 @@ const ProspectDetailsSummary = () => {
   const [loading, setLoading] = useState(false);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
-
   const navigate = useNavigate();
 
+  // Persist filters/search in URL
   useEffect(() => {
-    const params: any = {
-      search,
-      ...filters,
-    };
-
-    Object.keys(params).forEach(
-      (key) =>
-        (params[key] === "" || params[key] === undefined) && delete params[key]
-    );
-
+    const params: any = { search, ...filters };
+    Object.keys(params).forEach((key) => (params[key] === "" || params[key] === undefined) && delete params[key]);
     setSearchParams(params);
-  }, [search, filters]);
+  }, [search, filters, setSearchParams]);
 
+  // Persist filters/search in localStorage
   useEffect(() => {
-    localStorage.setItem(
-      LS_KEY,
-      JSON.stringify({
-        search,
-        filters,
-        selectedColumns,
-        showSearch,
-      })
-    );
+    localStorage.setItem(LS_KEY, JSON.stringify({ search, filters, selectedColumns, showSearch }));
   }, [search, filters, selectedColumns, showSearch]);
 
+  // Reset pagination when filters/search change
   useEffect(() => {
     setItems([]);
     setPage(1);
     setHasMore(true);
   }, [search, filters]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (loading || !hasMore) return;
-
     setLoading(true);
     try {
       const res = await fetchProspects(page, limit, search, filters);
-
-      setItems((prev) => [...prev, ...res.data]);
-
-      if (res.data.length < limit) {
-        setHasMore(false);
-      } else {
-        setPage((p) => p + 1);
-      }
+      const itemsFromRes = Array.isArray(res.data) ? res.data : res.data ?? [];
+      setItems((prev) => [...prev, ...itemsFromRes]);
+      if (itemsFromRes.length < limit) setHasMore(false);
+      else setPage((p) => p + 1);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching prospects:", err);
       setHasMore(false);
+    } finally {
+      setLoading(false);
     }
+  }, [page, limit, search, filters, loading, hasMore]);
 
-    setLoading(false);
-  };
-
-  const handleObserver = useCallback(
-    (entries: any) => {
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry.isIntersecting && hasMore && !loading) {
         loadData();
       }
-    },
-    [hasMore, loading]
-  );
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
-      threshold: 0.2,
-    });
-
+    }, { threshold: 0.2 });
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [handleObserver]);
+  }, [loadData, hasMore, loading]);
 
+  // Column selection & actions same as before
   const allSelected = selectedColumns.length === columns.length;
+  const toggleColumn = (key: string) => setSelectedColumns((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+  const toggleSelectAll = () => setSelectedColumns(allSelected ? DEFAULT_COLUMNS : columns.map((c) => c.key));
 
-  const handleEdit = (row: any) => {
-    navigate(`/form/${row._id}`);
-  };
-
-  // const handleDelete = async (row: any) => {
-  //   if (!window.confirm("Are you sure you want to delete this record?")) return;
-
-  //   try {
-  //     await deleteProspect(row._id);
-
-  //     // Refresh list after delete
-  //     setItems((prev) => prev.filter((item) => item._id !== row._id));
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Failed to delete. Check console for details.");
-  //   }
-  // };
-  const handleDeleteClick = (row: any) => {
-    setSelectedRow(row);
-    setDeleteDialogOpen(true);
-  };
+  const handleEdit = (row: any) => navigate(`/form/${row._id}`);
+  const handleDeleteClick = (row: any) => { setSelectedRow(row); setDeleteDialogOpen(true); };
 
   const handleConfirmDelete = async () => {
     if (!selectedRow) return;
-
     try {
       await deleteProspect(selectedRow._id);
-
       setItems((prev) => prev.filter((item) => item._id !== selectedRow._id));
     } catch (err) {
       console.error(err);
       alert("Failed to delete.");
     }
-
     setDeleteDialogOpen(false);
     setSelectedRow(null);
   };
-  const handleCancelDelete = () => {
-    setDeleteDialogOpen(false);
-    setSelectedRow(null);
-  };
-
-  const toggleColumn = (key: string) => {
-    setSelectedColumns((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-    );
-  };
-
-  const toggleSelectAll = () => {
-    setSelectedColumns(
-      allSelected ? DEFAULT_COLUMNS : columns.map((c) => c.key)
-    );
-  };
+  const handleCancelDelete = () => { setDeleteDialogOpen(false); setSelectedRow(null); };
 
   return (
     <div className="summary-container">
@@ -215,31 +142,14 @@ const ProspectDetailsSummary = () => {
           onAddNew={() => navigate("/form")}
         />
 
-        {/* <ProspectDetailsTable data={items} selectedColumns={selectedColumns} /> */}
-        <ProspectDetailsTable
-          data={items}
-          selectedColumns={selectedColumns}
-          onDelete={handleDeleteClick}
-          onEdit={handleEdit}
-        />
+        <ProspectDetailsTable data={items} selectedColumns={selectedColumns} onDelete={handleDeleteClick} onEdit={handleEdit} />
 
         <div ref={loaderRef} style={{ textAlign: "center", padding: "1rem" }}>
-          {loading ? (
-            <CircularProgress color="inherit" />
-          ) : hasMore ? (
-            <CircularProgress color="inherit" />
-          ) : (
-            "- No More Records -"
-          )}
+          {loading ? <CircularProgress color="inherit" /> : hasMore ? <CircularProgress color="inherit" /> : "- No More Records -"}
         </div>
       </div>
-      <ConfirmDialog
-        open={deleteDialogOpen}
-        title="Delete Prospect"
-        message="Are you sure you want to delete this record? This action cannot be undone."
-        onCancel={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-      />
+
+      <ConfirmDialog open={deleteDialogOpen} title="Delete Prospect" message="Are you sure you want to delete this record? This action cannot be undone." onCancel={handleCancelDelete} onConfirm={handleConfirmDelete} />
     </div>
   );
 };

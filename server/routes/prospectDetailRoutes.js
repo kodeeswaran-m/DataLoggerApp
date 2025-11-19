@@ -1,3 +1,4 @@
+// routes/prospectDetailRoutes.js
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/prospectDetailController");
@@ -12,8 +13,8 @@ router.get("/", controller.getProspectDetails);
 // GET /api/prospectDetail/:id → get single
 router.get("/:id", controller.getProspectById);
 
-// PUT /api/prospectDetail/:id → update
-router.put("/:id", controller.updateProspect);
+// PUT /api/prospectDetail/:id → update (accept file as multipart/form-data)
+router.put("/:id", upload.single("deck"), controller.updateProspect);
 
 // DELETE /api/prospectDetail/:id → delete
 router.delete("/:id", controller.deleteProspect);

@@ -1,44 +1,47 @@
+// models/prospectDetailModel.js
 const mongoose = require("mongoose");
 
-const CallSchema = new mongoose.Schema({
-  checked: { type: Boolean, default: false },
-  notes: { type: String, trim: true, default: "" },
-}, { _id: false });
+const CallSchema = new mongoose.Schema(
+  {
+    checked: { type: Boolean, default: false },
+    notes: { type: String, trim: true, default: "" },
+  },
+  { _id: false }
+);
 
-const ProspectDetailSchema = new mongoose.Schema({
-  month: { type: String, trim: true, required: true },
-  quarter: { type: String, trim: true, required: true },
-  prospect: { type: String, trim: true, required: true },
-  geo: { type: String, trim: true },
-  lob: { type: String, trim: true },
-  call1: { type: CallSchema, default: () => ({}) },
-  call2: { type: CallSchema, default: () => ({}) },
-  call3: { type: CallSchema, default: () => ({}) },
-  coreOfferings: { type: String, trim: true },
-  primaryNeed: { type: String, trim: true },
-  secondaryNeed: { type: String, trim: true },
+const ProspectDetailSchema = new mongoose.Schema(
+  {
+    month: { type: String, trim: true, default: "" },
+    quarter: { type: String, trim: true, default: "" },
+    prospect: { type: String, trim: true, default: "" },
+    geo: { type: String, trim: true, default: "" },
+    lob: { type: String, trim: true, default: "" },
 
-  // Category fields
- category: { type: [String], trim: true }, // now it's an array of strings
-categoryOther: { type: String, trim: true },
+    call1: { type: CallSchema, default: () => ({}) },
+    call2: { type: CallSchema, default: () => ({}) },
+    call3: { type: CallSchema, default: () => ({}) },
 
+    coreOfferings: { type: String, trim: true, default: "" },
+    primaryNeed: { type: String, trim: true, default: "" },
+    secondaryNeed: { type: String, trim: true, default: "" },
 
-  trace: { type: String, trim: true },
-  salesSpoc: { type: String, trim: true },
-  oppId: { type: String, trim: true, index: true },
-  oppDetails: { type: String, trim: true },
-  deck: { type: String, trim: true },
-  deckPublicId: { type: String, trim: true },
-  rag: { type: String, trim: true },
-  remark: { type: String, trim: true },
+    // SINGLE string category (Option B)
+    category: { type: String, trim: true, default: "" },
 
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+    categoryOther: { type: String, trim: true, default: "" },
 
-ProspectDetailSchema.pre("save", function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
+    trace: { type: String, trim: true, default: "" },
+    salesSpoc: { type: String, trim: true, default: "" },
+    oppId: { type: String, trim: true, default: "" },
+    oppDetails: { type: String, trim: true, default: "" },
+
+    deck: { type: String, trim: true, default: "" },
+    deckPublicId: { type: String, trim: true, default: "" },
+
+    rag: { type: String, trim: true, default: "" },
+    remark: { type: String, trim: true, default: "" },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("ProspectDetail", ProspectDetailSchema);

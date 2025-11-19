@@ -1,4 +1,4 @@
-// DynamicFormField.types.ts
+// src/components/DynamicFormField/DynamicFormField.types.ts
 import React from "react";
 
 export type BaseFieldProps<T> = {
