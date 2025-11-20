@@ -1,4 +1,3 @@
-// src/pages/ProspectDetailForm/ProspectDetailForm.tsx
 import React, { useEffect, useState } from "react";
 import "./ProspectDetailForm.css";
 import { monthToQuarter } from "../../services/quarter";
@@ -11,39 +10,39 @@ import {
 } from "../../services/ProspectDetailServices";
 import DynamicFormField from "../../components/DynamicFormField/DynamicFormField";
 import { useNavigate, useParams } from "react-router-dom";
-
+ 
 type CallSection = { checked: boolean; notes: string };
-
+ 
 type FormValues = {
   month: string;
   quarter: string;
   prospect: string;
   geo: string;
   lob: string;
-
+ 
   call1: CallSection;
   call2: CallSection;
   call3: CallSection;
-
+ 
   coreOfferings: string;
   primaryNeed: string;
   secondaryNeed: string;
-
+ 
   category: string;
   categoryOther?: string;
-
+ 
   trace: string;
   salesSpoc: string;
   oppId: string;
   oppDetails: string;
-
+ 
   deck: string; // filename
   rag: string;
   remark: string;
 };
-
+ 
 const emptyCalls: CallSection = { checked: false, notes: "" };
-
+ 
 const allowedFileTypes = [
   "application/pdf",
   "application/vnd.ms-powerpoint",
@@ -54,7 +53,7 @@ const allowedFileTypes = [
   "application/zip",
   "application/x-zip-compressed",
 ];
-
+ 
 const emptyValues: FormValues = {
   month: "",
   quarter: "",
@@ -77,17 +76,17 @@ const emptyValues: FormValues = {
   rag: "",
   remark: "",
 };
-
+ 
 const ProspectDetailForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
-
+ 
   const [file, setFile] = useState<File | null>(null);
   const [deckPreview, setDeckPreview] = useState<string>(""); // existing deck URL if any
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<FormValues>(emptyValues);
-
+ 
   // update helper (works with nested call objects)
   const updateValue = <K extends keyof FormValues>(name: K, value: FormValues[K]) => {
     setValues((prev) => {
@@ -96,7 +95,7 @@ const ProspectDetailForm: React.FC = () => {
       return next;
     });
   };
-
+ 
   // file select
   const handleFileSelect = (f: File) => {
     if (!allowedFileTypes.includes(f.type)) {
@@ -108,7 +107,7 @@ const ProspectDetailForm: React.FC = () => {
     updateValue("deck", f.name);
     setDeckPreview("");
   };
-
+ 
   // load existing prospect when editing
   useEffect(() => {
     if (!isEdit) return;
@@ -120,7 +119,7 @@ const ProspectDetailForm: React.FC = () => {
           alert("Record not found");
           return;
         }
-
+ 
         // Defensive: normalize category & categoryOther
         let categoryValue = "";
         if (Array.isArray(doc.category) && doc.category.length > 0) {
@@ -129,7 +128,7 @@ const ProspectDetailForm: React.FC = () => {
         } else if (typeof doc.category === "string") {
           categoryValue = doc.category;
         }
-
+ 
         let categoryOtherValue = "";
         if (Array.isArray(doc.categoryOther)) {
           // defensive: take first if backend accidentally stored array
@@ -137,7 +136,7 @@ const ProspectDetailForm: React.FC = () => {
         } else if (doc.categoryOther) {
           categoryOtherValue = String(doc.categoryOther);
         }
-
+ 
         setValues({
           month: doc.month || "",
           quarter: doc.quarter || monthToQuarter(doc.month || ""),
@@ -160,7 +159,7 @@ const ProspectDetailForm: React.FC = () => {
           rag: doc.rag || "",
           remark: doc.remark || "",
         });
-
+ 
         if (doc.deck && typeof doc.deck === "string" && doc.deck.startsWith("http")) {
           setDeckPreview(doc.deck);
         } else {
@@ -173,10 +172,10 @@ const ProspectDetailForm: React.FC = () => {
         setLoading(false);
       }
     };
-
+ 
     load();
   }, [isEdit, id]);
-
+ 
   // build fields
   const fields: DynamicFieldProps[] = [
     {
@@ -230,7 +229,7 @@ const ProspectDetailForm: React.FC = () => {
       ],
       onChange: (v) => updateValue("lob", v),
     },
-
+ 
     // Calls (checkbox-with-text expects checked + textField)
     {
       type: "checkbox-with-text",
@@ -259,7 +258,7 @@ const ProspectDetailForm: React.FC = () => {
       onChange: (v) => updateValue("call3", { ...values.call3, checked: v }),
       onTextFieldChange: (v) => updateValue("call3", { ...values.call3, notes: v }),
     },
-
+ 
     {
       type: "select",
       name: "coreOfferings",
@@ -274,10 +273,10 @@ const ProspectDetailForm: React.FC = () => {
       ],
       onChange: (v) => updateValue("coreOfferings", v),
     },
-
+ 
     { type: "text", name: "primaryNeed", label: "Primary Need", value: values.primaryNeed, onChange: (v) => updateValue("primaryNeed", v) },
     { type: "text", name: "secondaryNeed", label: "Secondary Need", value: values.secondaryNeed, onChange: (v) => updateValue("secondaryNeed", v) },
-
+ 
     {
       type: "custom",
       name: "categoryField",
@@ -290,9 +289,9 @@ const ProspectDetailForm: React.FC = () => {
         />
       ),
     },
-
+ 
     { type: "textarea", name: "trace", label: "Trace", value: values.trace, className: "full", onChange: (v) => updateValue("trace", v) },
-
+ 
     {
       type: "select",
       name: "salesSpoc",
@@ -306,10 +305,10 @@ const ProspectDetailForm: React.FC = () => {
       ],
       onChange: (v) => updateValue("salesSpoc", v),
     },
-
+ 
     { type: "text", name: "oppId", label: "Opportunity ID", value: values.oppId, disabled: true },
     { type: "textarea", name: "oppDetails", label: "Opportunity Details", value: values.oppDetails, disabled: true, className: "full" },
-
+ 
     {
       type: "file",
       name: "deck",
@@ -318,7 +317,7 @@ const ProspectDetailForm: React.FC = () => {
       onFileSelect: handleFileSelect,
       onChange: (v) => updateValue("deck", v),
     },
-
+ 
     {
       type: "select",
       name: "rag",
@@ -331,20 +330,20 @@ const ProspectDetailForm: React.FC = () => {
       ],
       onChange: (v) => updateValue("rag", v),
     },
-
+ 
     { type: "text", name: "remark", label: "Remarks", value: values.remark, className: "full", onChange: (v) => updateValue("remark", v) },
   ];
-
+ 
   const handleSubmit = async () => {
     try {
       if (!values.month || !values.quarter || !values.prospect) {
         alert("Please fill Month, Quarter (auto), and Prospect before submitting.");
         return;
       }
-
+ 
       const fd = new FormData();
       if (file) fd.append("deck", file);
-
+ 
       // Append scalar string fields except nested calls and category (we handle calls & category specially)
       const skip = ["call1", "call2", "call3", "category", "categoryOther"] as (keyof FormValues)[];
       (Object.keys(values) as (keyof FormValues)[]).forEach((k) => {
@@ -352,17 +351,17 @@ const ProspectDetailForm: React.FC = () => {
         const v = values[k];
         if (typeof v === "string") fd.append(k, v);
       });
-
+ 
       // Append nested calls as JSON strings (backend will parse)
       fd.append("call1", JSON.stringify(values.call1));
       fd.append("call2", JSON.stringify(values.call2));
       fd.append("call3", JSON.stringify(values.call3));
-
+ 
       // ===== CATEGORY handling (Option A: categoryOther is a single string) =====
       // Clean up any accidental arrays in categoryOther (defensive)
      // ===== FIXED CATEGORY HANDLING — NO DUPLICATES =====
 // ===== FIXED CATEGORY HANDLING (NO DUPLICATES, ALWAYS STRING) =====
-
+ 
 // Sanitize categoryOther (ensure it is a single string)
 let categoryOther = "";
 if (Array.isArray(values.categoryOther)) {
@@ -370,10 +369,10 @@ if (Array.isArray(values.categoryOther)) {
 } else {
   categoryOther = values.categoryOther || "";
 }
-
+ 
 // Determine final "category" that must be stored in DB
 let finalCategory = "";
-
+ 
 if (values.category === "other") {
   // User typed custom value → use categoryOther
   finalCategory = categoryOther;
@@ -382,12 +381,12 @@ if (values.category === "other") {
   finalCategory = values.category || "";
   categoryOther = ""; // clear other
 }
-
+ 
 // Append exactly once – never duplicate
 fd.append("category", finalCategory);
 fd.append("categoryOther", categoryOther);
-
-
+ 
+ 
       if (isEdit) {
         await updateProspect(id!, fd);
         alert("Successfully Updated!");
@@ -395,19 +394,19 @@ fd.append("categoryOther", categoryOther);
         await createProspectDetail(fd);
         alert("Successfully Submitted!");
       }
-
+ 
       navigate("/summary");
     } catch (err) {
       console.error("submit error:", err);
       alert("Error submitting form — check console for more info.");
     }
   };
-
+ 
   return (
     <div className="demo-wrapper">
       <main className="content-area">
         <h1 className="header">{isEdit ? "Edit Prospect" : "Prospect Entry Form"}</h1>
-
+ 
         {loading ? (
           <div>Loading...</div>
         ) : (
@@ -419,7 +418,7 @@ fd.append("categoryOther", categoryOther);
                 <DynamicFormField key={f.name} {...(f as DynamicFieldProps)} />
               )
             )}
-
+ 
             {/* show existing deck preview (URL) */}
             {deckPreview ? (
               <div style={{ marginTop: 8 }}>
@@ -428,7 +427,7 @@ fd.append("categoryOther", categoryOther);
                 </a>
               </div>
             ) : null}
-
+ 
             <div className="button-row full">
               <button className="submit-btn" onClick={handleSubmit}>
                 {isEdit ? "Update Prospect" : "Submit Prospect"}
@@ -443,5 +442,5 @@ fd.append("categoryOther", categoryOther);
     </div>
   );
 };
-
+ 
 export default ProspectDetailForm;
