@@ -6,11 +6,7 @@ const api = axios.create({
   // you can add timeout if needed
 });
 
-<<<<<<< HEAD
-// Create a new prospect (returns document)
-export const createProspectDetail = async (formData: FormData) => {
-  const res = await api.post("/", formData, {
-=======
+const API_URL = "http://localhost:5000/api/prospectDetail";
 export const fetchProspects = async (
   page = 1,
   limit = 20,
@@ -41,28 +37,14 @@ export const deleteProspect = async (id: string) => {
 
 
 // POST with multipart/form-data
-export const createProspectDetail = async (data: ProspectPayload) => {
-  console.log("form data from service", data);
-  const res = await axios.post(API_URL, data, {
->>>>>>> edcc113ceb9efe23fd06c2534e3c67c5378efc78
+export const createProspectDetail = async (formData: FormData) => {
+  const res = await api.post("/", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-  return res.data.data;
+  return res.data.data; // return document
 };
 
-// Fetch prospects with pagination -> returns { data, total }
-export const fetchProspects = async (
-  page = 1,
-  limit = 30,
-  search = "",
-  filters: Record<string, string> = {}
-) => {
-  const params: any = { page, limit };
-  if (search) params.search = search;
-  Object.assign(params, filters);
-  const res = await api.get("/", { params });
-  return { data: res.data.data ?? [], total: res.data.total ?? 0 };
-};
+
 
 // Get single prospect by ID (returns document)
 export const getProspectById = async (id: string) => {
@@ -78,8 +60,4 @@ export const updateProspect = async (id: string, formData: FormData) => {
   return res.data.data;
 };
 
-// Delete prospect by ID
-export const deleteProspect = async (id: string) => {
-  const res = await api.delete(`/${id}`);
-  return res.data;
-};
+
