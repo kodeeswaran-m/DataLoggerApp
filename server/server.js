@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const prospectRoutes = require("./routes/prospectDetailRoutes");
 const morgan = require("morgan");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const app = express();
 const PORT = process.env.PORT || 5000;

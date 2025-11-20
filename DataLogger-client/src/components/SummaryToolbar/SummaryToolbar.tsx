@@ -9,21 +9,17 @@ interface SummaryToolbarProps {
   setShowSearch: (v: boolean) => void;
   search: string;
   setSearch: (v: string) => void;
-
   filters: any;
   setFilters: (v: any) => void;
-
   showPicker: boolean;
   setShowPicker: (v: boolean) => void;
-
   allSelected: boolean;
   toggleSelectAll: () => void;
   selectedColumns: string[];
   toggleColumn: (key: string) => void;
-
   columns: any[];
-
   onAddNew: () => void;
+  total: number
 }
 
 export default function SummaryToolbar({
@@ -41,6 +37,7 @@ export default function SummaryToolbar({
   toggleColumn,
   columns,
   onAddNew,
+  total
 }: SummaryToolbarProps) {
   return (
     <div className="summary-toolbar">
@@ -77,10 +74,13 @@ export default function SummaryToolbar({
         />
         <FilterDropdown filters={filters} setFilters={setFilters} />
 
-        <Tooltip title="sort">
+        {/* <Tooltip title="sort">
           <button className="icon-btn std-control">
             <ArrowUpDown size={18} />
           </button>
+        </Tooltip> */}
+        <Tooltip title="total records">
+          <p className="icon-btn count-txt">Total : {total}</p>
         </Tooltip>
         <Tooltip title="add new">
           <button className="add-btn" onClick={onAddNew}>

@@ -217,14 +217,38 @@ export default function DynamicRechartsBar({ url }: { url: string }) {
             layout="horizontal"
           >
             <CartesianGrid strokeDasharray="3 3" />
+
             <XAxis
               dataKey="x"
               tick={{ fontSize: 9, fontWeight: 400 }}
               interval={0}
             />
             <YAxis type="number" tick={{ fontSize: 9, fontWeight: 400 }} />
-            <Tooltip />
-            <Legend />
+
+            {/* ↓↓↓ SMALLER TOOLTIP FONT ↓↓↓ */}
+            <Tooltip
+           
+              contentStyle={{
+                fontSize: "10px", // tooltip box text
+                padding: "4px 6px",
+              }}
+              labelStyle={{
+                fontSize: "10px", // X-axis label inside tooltip
+                fontWeight: "bold",
+              }}
+              itemStyle={{
+                fontSize: "10px", // label + value for each bar
+              }}
+            />
+
+            {/* ↓↓↓ SMALLER LEGEND FONT ↓↓↓ */}
+            <Legend
+              wrapperStyle={{
+                fontSize: "10px", // reduces legend item text
+                paddingTop: "10px",
+              }}
+            />
+
             {selectedSeries.map((series, index) => (
               <Bar
                 key={series}
